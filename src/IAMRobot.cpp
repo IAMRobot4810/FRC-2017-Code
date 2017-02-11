@@ -8,19 +8,20 @@
 #include <IAMRobot.h>
 using namespace frc;
 IAMRobot::IAMRobot() {
+
 	flTalon = new CANTalon(flTalID);
 	frTalon = new CANTalon(frTalID);
 	blTalon = new CANTalon(blTalID);
 	brTalon = new CANTalon(brTalID);
 	drive  = new RobotDrive(flTalon,frTalon,blTalon,brTalon);
-	mainStick = new Joystick(mainStickID);
+	mainController = new XboxController(mainControllerID);
 	driveEncoder1 = new Encoder(driveEncoder1Port1,driveEncoder1Port2,true,Encoder::EncodingType::k4X);
 	driveEncoder2 = new Encoder(driveEncoder2Port1,driveEncoder2Port2,true,Encoder::EncodingType::k4X);
 }
 
 IAMRobot::~IAMRobot() {
 	delete drive;
-	delete mainStick;
+	delete mainController;
 	delete flTalon;
 	delete frTalon;
 	delete blTalon;
@@ -40,9 +41,9 @@ void IAMRobot::TeleopInit(){
 
 }
 void IAMRobot::TeleopPeriodic(){
-	drive->ArcadeDrive(mainStick);
-	SmartDashboard::PutNumber("Encoder1 Rate:", driveEncoder1->Get());
-	SmartDashboard::PutNumber("Encoder2 Rate:", driveEncoder2->Get());
+	drive->TankDrive(mainController->GetY(Joystick::kLeftHand),mainController->GetY(Joystick::kRightHand));
+	SmartDashboard::PutNumber("Encoder1 Get:", driveEncoder1->Get());
+	SmartDashboard::PutNumber("Encoder2 Get:", driveEncoder2->Get());
 }
 void IAMRobot::TestPeriodic(){
 

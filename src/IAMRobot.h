@@ -15,7 +15,9 @@ class IAMRobot: public IterativeRobot {
 public:
 	IAMRobot();
 	virtual ~IAMRobot();
+
 private:
+	XboxController *mainController;
 	CANTalon *flTalon;
 	CANTalon *frTalon;
 	CANTalon *blTalon;
@@ -23,6 +25,7 @@ private:
 	RobotDrive *drive;
 	Encoder* driveEncoder1;
 	Encoder* driveEncoder2;
+
 	int driveEncoder1Port1;
 	int driveEncoder1Port2;
 	int driveEncoder2Port1;
@@ -31,8 +34,8 @@ private:
 	int frTalID;
 	int blTalID;
 	int brTalID;
-	int mainStickID;
-	frc::Joystick *mainStick;
+	int mainControllerID;
+
 	void RobotInit();
 	void AutonomousInit();
 	void AutonomousPeriodic();
