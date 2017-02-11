@@ -12,6 +12,11 @@ class DriveSystem {
 public:
 	DriveSystem();
 	virtual ~DriveSystem();
+	void DriveArcade();
+
+private:
+
+
 };
 
 #endif /* SRC_SYSTEMS_DRIVESYSTEM_H_ */

@@ -9,19 +9,24 @@
 #define SRC_IAMROBOT_H_
 #include "WPILib.h"
 #include "CANTalon.h"
+#include <iostream>
+#include <memory>
+#include <string>
+
+#include <IterativeRobot.h>
 using namespace frc;
 class IAMRobot: public IterativeRobot {
 
 public:
 	IAMRobot();
-	virtual ~IAMRobot();
+	~IAMRobot();
 
 private:
 	XboxController *mainController;
 	CANTalon *flTalon;
 	CANTalon *frTalon;
-	CANTalon *blTalon;
-	CANTalon *brTalon;
+	CANTalon *rlTalon;
+	CANTalon *rrTalon;
 	RobotDrive *drive;
 	Encoder* driveEncoder1;
 	Encoder* driveEncoder2;
@@ -30,18 +35,18 @@ private:
 	int driveEncoder1Port2;
 	int driveEncoder2Port1;
 	int driveEncoder2Port2;
-	int flTalID;
-	int frTalID;
-	int blTalID;
-	int brTalID;
-	int mainControllerID;
+	int flTalID = 1;
+	int frTalID = 3;
+	int rlTalID = 2;
+	int rrTalID = 4;
+	int mainControllerID = 0;
 
-	void RobotInit();
-	void AutonomousInit();
-	void AutonomousPeriodic();
-	void TeleopInit();
-	void TeleopPeriodic();
-	void TestPeriodic();
+	void RobotInit() override;
+	void AutonomousInit() override;
+	void AutonomousPeriodic() override;
+	void TeleopInit() override;
+	void TeleopPeriodic() override;
+	void TestPeriodic() override;
 
 };
 
