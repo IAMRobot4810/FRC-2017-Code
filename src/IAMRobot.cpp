@@ -12,11 +12,13 @@ IAMRobot::IAMRobot() {
 
 	mainController = new XboxController(mainControllerID);
 	driveSystem = new DriveSystem(mainController);
+	pickup = new GearPickup(mainController);
 }
 
 IAMRobot::~IAMRobot() {
 	delete mainController;
 	delete driveSystem;
+	delete pickup;
 }
 
 void IAMRobot::RobotInit(){
@@ -32,7 +34,8 @@ void IAMRobot::TeleopInit(){
 
 }
 void IAMRobot::TeleopPeriodic(){
-	driveSystem->TankDriveStickSquare();
+	driveSystem->ArcadeDriveStickSquare();
+	pickup->teleopGearLoop();
 }
 void IAMRobot::TestPeriodic(){
 

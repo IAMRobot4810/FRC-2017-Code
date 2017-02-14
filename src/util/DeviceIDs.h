@@ -17,4 +17,10 @@ enum SensorID{
 
 };
 
+enum PnuematicIDS{
+	liftSolenoidID = 0,
+	clampSolenoidID = 1,
+	PCM_ID = 1
+};
+
 #endif

@@ -16,6 +16,7 @@
 #include <IterativeRobot.h>
 #include "systems/DriveSystem.h"
 #include "util/DeviceIDs.h"
+#include "systems/GearPickup.h"
 using namespace frc;
 
 class IAMRobot: public IterativeRobot {
@@ -27,7 +28,7 @@ public:
 private:
 	XboxController *mainController;
 	DriveSystem* driveSystem;
-
+	GearPickup* pickup;
 	void RobotInit() override;
 	void AutonomousInit() override;
 	void AutonomousPeriodic() override;
