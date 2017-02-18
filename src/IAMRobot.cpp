@@ -9,7 +9,6 @@
 using namespace frc;
 
 IAMRobot::IAMRobot() {
-
 	mainController = new XboxController(mainControllerID);
 	driveSystem = new DriveSystem(mainController);
 	pickup = new GearPickup(mainController);

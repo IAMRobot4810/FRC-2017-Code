@@ -13,7 +13,8 @@ enum SensorID{
 	flEncID2,
 	frEncID1,
 	frEncID2,
-	gyroID
+	gyroID,
+	BannerID = 0
 
 };
 
@@ -22,5 +23,12 @@ enum PnuematicIDS{
 	clampSolenoidID = 1,
 	PCM_ID = 1
 };
+
+enum BallPickup{
+	innerRollerID,
+	outerRollerID,
+	backDoorID
+};
+
 
 #endif

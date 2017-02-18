@@ -11,47 +11,45 @@ GearPickup::GearPickup(XboxController*controller) {
 	this->controller = controller;
 	liftSolenoid = new Solenoid(PCM_ID,liftSolenoidID);
 	clampSolenoid = new Solenoid(PCM_ID,clampSolenoidID);
-
+	banner = new DigitalInput(BannerID);
 }
 
 GearPickup::~GearPickup() {
 	delete controller;
 	delete liftSolenoid;
 	delete clampSolenoid;
+	delete banner;
 }
 
 void GearPickup::teleopGearLoop(){
-	/*
-	if(controller->GetXButton() && !liftSolenoid->Get()){
-		liftSolenoid->Set(true);
-	}else if(controller->GetXButton() && liftSolenoid->Get()){
-		liftSolenoid->Set(false);
-	}
-	if(controller->GetYButton() && !clampSolenoid->Get()){
-		clampSolenoid->Set(true);
-	}else if(controller->GetYButton() && !clampSolenoid->Get()){
-		clampSolenoid->Set(false);
-	}
-	*/
-	if(isliftSolenoid && controller->GetXButton()){
+	banner->UpdateTable();
+	SmartDashboard::PutBoolean("Banner", banner->Get());
+	if(isliftSolenoid && controller->GetBumper(Joystick::kRightHand)){
 		isliftSolenoid  = false;
 		liftSolenoid->Set(false);
-		Wait(0.5);
+		Wait(GearPickWaitTime);
+
 	}
-	else if(!isliftSolenoid && controller->GetXButton()){
+	else if(!isliftSolenoid && controller->GetBumper(Joystick::kRightHand)){
 		isliftSolenoid  = true;
 		liftSolenoid->Set(true);
-		Wait(0.5);
+		Wait(GearPickWaitTime);
 	}
-	else if(isclampSolenoid && controller->GetYButton()){
+	else if(isclampSolenoid && controller->GetBumper(Joystick::kLeftHand)){
 		isclampSolenoid = false;
 		clampSolenoid->Set(false);
-		Wait(0.5);
+		Wait(GearPickWaitTime);
 	}
-	else if(!isclampSolenoid && controller->GetYButton()){
+	else if(!isclampSolenoid && controller->GetBumper(Joystick::kLeftHand)){
 		isclampSolenoid = true;
 		clampSolenoid->Set(true);
-		Wait(0.5);
+		Wait(GearPickWaitTime);
 	}
 
 }
+
+void GearPickup::teleopGearLoopMod(){
+
+}
+
+
