@@ -1,20 +1,27 @@
 /*
- * Deadband.cpp
+ * Deadband.h
  *
  *  Created on: Feb 11, 2017
- *      Author: Anish
+ *      Author: 4810
  */
 
-#include "Deadband.h"
+#include <teleop/controls/Deadband.h>
 
-Deadband::Deadband(double LowBound, double HighBound){
-	this->LowBound = LowBound;
-	this->HighBound = HighBound;
+Deadband::Deadband(){
+
 }
-double Deadband::ReturnBoundedValue(double value){
-	if(value<0 && value<=LowBound || value>0 && value>=HighBound){
-		return value;
-	}else{
-		return 0;
+
+Deadband::~Deadband(){
+
+}
+
+double Deadband::DeadbandOut(double input, double deadBandLimit){
+	double deadOut = 0;
+	if((input > 0 && input > deadBandLimit) || (input < 0 && input < -deadBandLimit)){
+		deadOut = input;
 	}
+	else{
+		deadOut = 0;
+	}
+	return deadOut;
 }

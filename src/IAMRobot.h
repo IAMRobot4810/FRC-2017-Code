@@ -1,39 +1,75 @@
 /*
  * IAMRobot.h
  *
- *  Created on: Feb 9, 2017
- *      Author: Anish
+ *  Created on: Feb 10, 2017
+ *      Author: 4810
  */
 
 #ifndef SRC_IAMROBOT_H_
 #define SRC_IAMROBOT_H_
-#include "WPILib.h"
-#include "CANTalon.h"
+
 #include <iostream>
 #include <memory>
 #include <string>
 
 #include <IterativeRobot.h>
-#include "systems/DriveSystem.h"
-#include "util/DeviceIDs.h"
+#include <LiveWindow/LiveWindow.h>
+#include <SmartDashboard/SendableChooser.h>
+#include <SmartDashboard/SmartDashboard.h>
+#include <WPILib.h>
+#include <teleop/Teleop.h>
+#include <auto/Auto.h>
+#include <Relay.h>
+
 using namespace frc;
 
-class IAMRobot: public IterativeRobot {
+class IAMRobot: public frc::IterativeRobot {
 
 public:
 	IAMRobot();
 	~IAMRobot();
 
-private:
-	XboxController *mainController;
-	DriveSystem* driveSystem;
+	CANTalon* flTalon;
+	CANTalon* rlTalon;
+	CANTalon* frTalon;
+	CANTalon* rrTalon;
+	RobotDrive* robotDrive;
+	PWM* flEncoder;
+	PWM* frEncoder;
+	DriveSystem* drive;
+	DoubleSolenoid* gearClawNoid;
+	DoubleSolenoid* gearRaiseNoid;
+	GearSystem* gear;
+	CANTalon* climbRoller;
+	CANTalon* climbLeft;
+	CANTalon* climbRight;
+	ClimbSystem* climb;
+	CANTalon* ballWall1Tal;
+	CANTalon* ballWall2Tal;
+	DoubleSolenoid* pickupSol;
+	BallSystem* ball;
+	XboxController* control1;
+	XboxController* control2;
+	Teleop* tlp;
+	//Auto* ato;
+	DigitalInput* gearSensor;
+	DigitalInput* pegSensor;
 
-	void RobotInit() override;
+	void RobotInit();
 	void AutonomousInit() override;
-	void AutonomousPeriodic() override;
-	void TeleopInit() override;
-	void TeleopPeriodic() override;
-	void TestPeriodic() override;
+	void AutonomousPeriodic();
+	void TeleopInit();
+	void TeleopPeriodic();
+	void TestPeriodic();
+
+private:
+	LiveWindow *lw = LiveWindow::GetInstance();
+	SendableChooser<std::string> chooser;
+	const std::string autoNameDefault = "Default";
+	const std::string autoNameCustom = "My Auto";
+	std::string autoSelected;
+
+protected:
 
 };
 
