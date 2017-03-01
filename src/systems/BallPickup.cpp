@@ -11,7 +11,7 @@ Ball_Pickup::Ball_Pickup(XboxController* controller) {
 	this->control = controller;
 	innerRoller = new CANTalon(innerRollerID);
 	outerRoller = new CANTalon(outerRollerID);
-	Ball_BackDoor = new DoubleSolenoid(backDoorID1,backDoorID2);
+	Ball_BackDoor = new DoubleSolenoid(PCM_ID,backDoorID1,backDoorID2);
 }
 
 Ball_Pickup::~Ball_Pickup() {
@@ -57,11 +57,10 @@ void Ball_Pickup::TeleopBallLoopToggled(){
 	}
 
 	if(control->GetTriggerAxis(GenericHID::kLeftHand)){
-		if(Ball_BackDoor->Get() == DoubleSolenoid::Value::kForward){
-			BallInput(control->GetTriggerAxis(GenericHID::kLeftHand));
-		}else {
 			BallOutput(control->GetTriggerAxis(GenericHID::kLeftHand));
-		}
+	}
+	else{
+		BallOutput(0);
 	}
 }
 void Ball_Pickup::BallInput(double speed){
@@ -70,7 +69,7 @@ void Ball_Pickup::BallInput(double speed){
 }
 
 void Ball_Pickup::BallOutput(double speed){
-	innerRoller->Set(-1*speed);
+	innerRoller->Set(speed);
 	outerRoller->Set(-1*speed);
 }
 

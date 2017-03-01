@@ -1,5 +1,6 @@
 #ifndef IDS
 #define IDS
+
 enum DriveID{
 	flTalID = 1,
 	frTalID = 4,
