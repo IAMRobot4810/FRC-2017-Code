@@ -22,7 +22,7 @@ Ball_Pickup::~Ball_Pickup() {
 
 }
 
-void Ball_Pickup::TeleopBallLoopToggled(){
+void Ball_Pickup::TeleopBallLoop(){
 	if(control->GetBumper(GenericHID::kLeftHand) && elevatorToggle){
 		elevatorToggle = false;
 		if(Ball_BackDoor->Get() == DoubleSolenoid::Value::kForward){

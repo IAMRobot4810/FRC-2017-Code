@@ -39,7 +39,7 @@ void IAMRobot::TeleopInit(){
 void IAMRobot::TeleopPeriodic(){
 	driveSystem->ArcadeDriveStickSquare();
 	pickup->teleopGearLoop();
-	baller->TeleopBallLoopToggled();
+	baller->TeleopBallLoop();
 	lifter->TeleopLoop();
 }
 void IAMRobot::TestPeriodic(){
