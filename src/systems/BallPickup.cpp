@@ -22,26 +22,6 @@ Ball_Pickup::~Ball_Pickup() {
 
 }
 
-void Ball_Pickup::TeleopBallLoop(){
-	if(control->GetXButton() && !control->GetYButton()){
-		BallInput(1);
-	}
-	else if(control->GetYButton() && !control->GetXButton()){
-		BallOutput(1);
-	}
-
-	else if(control->GetTriggerAxis(Joystick::kRightHand) && !control->GetTriggerAxis(Joystick::kLeftHand)){
-		RaiseElevator();
-	}
-	else if(control->GetTriggerAxis(Joystick::kRightHand) && !control->GetTriggerAxis(Joystick::kLeftHand)){
-		LowElevator();
-	}
-
-	else{
-		innerRoller->Set(0);
-		outerRoller->Set(0);
-	}
-}
 void Ball_Pickup::TeleopBallLoopToggled(){
 	if(control->GetBumper(GenericHID::kLeftHand) && elevatorToggle){
 		elevatorToggle = false;

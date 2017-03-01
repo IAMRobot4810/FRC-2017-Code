@@ -22,24 +22,6 @@ Lifter::~Lifter() {
 }
 
 void Lifter::TeleopLoop(){
-	if(controller->GetAButton()&& !controller->GetBButton()){
-		leftInRoller->Set(RollerSpeed);
-		rightInRoller->Set(RollerSpeed);
-		liftTalon->Set(LiftSpeed);
-	}
-	else if(controller->GetBButton() && !controller->GetAButton()){
-		leftInRoller->Set(-1*RollerSpeed);
-		rightInRoller->Set(-1*RollerSpeed);
-		liftTalon->Set(-1*LiftSpeed);
-	}
-	else{
-		leftInRoller->Set(0);
-		rightInRoller->Set(0);
-		liftTalon->Set(0);
-	}
-}
-
-void Lifter::TeleopLoopImproved(){
 	if(controller->GetBumper(GenericHID::kRightHand)){
 		leftInRoller->Set(RollerSpeed);
 		rightInRoller->Set(-1*RollerSpeed);
