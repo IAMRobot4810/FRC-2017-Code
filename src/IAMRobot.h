@@ -14,7 +14,13 @@
 #include <string>
 
 #include <IterativeRobot.h>
+#include "systems/DriveSystem.h"
+#include "util/DeviceIDs.h"
+#include "systems/GearPickup.h"
+#include "systems/BallPickup.h"
+#include "systems/Lifter.h"
 using namespace frc;
+
 class IAMRobot: public IterativeRobot {
 
 public:
@@ -23,24 +29,10 @@ public:
 
 private:
 	XboxController *mainController;
-	CANTalon *flTalon;
-	CANTalon *frTalon;
-	CANTalon *rlTalon;
-	CANTalon *rrTalon;
-	RobotDrive *drive;
-	Encoder* driveEncoder1;
-	Encoder* driveEncoder2;
-
-	int driveEncoder1Port1;
-	int driveEncoder1Port2;
-	int driveEncoder2Port1;
-	int driveEncoder2Port2;
-	int flTalID = 1;
-	int frTalID = 3;
-	int rlTalID = 2;
-	int rrTalID = 4;
-	int mainControllerID = 0;
-
+	DriveSystem* driveSystem;
+	GearPickup* pickup;
+	Ball_Pickup* baller;
+	Lifter* lifter;
 	void RobotInit() override;
 	void AutonomousInit() override;
 	void AutonomousPeriodic() override;

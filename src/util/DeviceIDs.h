@@ -1,6 +1,44 @@
+#ifndef IDS
+#define IDS
+enum DriveID{
+	flTalID = 1,
+	frTalID = 4,
+	rlTalID = 2,
+	rrTalID = 5,
+	mainControllerID = 0,
+};
 
-	int flTalID = 1;
-	int frTalID = 3;
-	int rlTalID = 2;
-	int rrTalID = 4;
-	int mainControllerID = 0;
+enum SensorID{
+	flEncID1,
+	flEncID2,
+	frEncID1,
+	frEncID2,
+	gyroID,
+	BannerID
+
+};
+
+enum PnuematicIDS{
+	liftSolenoidID1=0,
+	liftSolenoidID2=1,
+	clampSolenoidID1=2,
+	clampSolenoidID2=3,
+	PCM_ID=1
+};
+
+enum BallPickup{
+	innerRollerID=9,
+	outerRollerID=8,
+	backDoorID1 = 4,
+	backDoorID2 =5
+};
+
+enum LifterID{
+	leftInRollerID=7,
+	rightInRollerID=6,
+	lifterTalonID=3
+
+};
+
+
+#endif

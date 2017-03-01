@@ -7,25 +7,21 @@
 
 #include <IAMRobot.h>
 using namespace frc;
-IAMRobot::IAMRobot() {
 
-	flTalon = new CANTalon(flTalID);
-	frTalon = new CANTalon(frTalID);
-	rlTalon = new CANTalon(rlTalID);
-	rrTalon = new CANTalon(rrTalID);
-	drive  = new RobotDrive(flTalon,rlTalon,frTalon,rrTalon);
+IAMRobot::IAMRobot() {
 	mainController = new XboxController(mainControllerID);
-	driveEncoder1 = new Encoder(driveEncoder1Port1,driveEncoder1Port2,true,Encoder::EncodingType::k4X);
-	driveEncoder2 = new Encoder(driveEncoder2Port1,driveEncoder2Port2,true,Encoder::EncodingType::k4X);
+	driveSystem = new DriveSystem(mainController);
+	pickup = new GearPickup(mainController);
+	baller = new Ball_Pickup(mainController);
+	lifter = new Lifter(mainController);
 }
 
 IAMRobot::~IAMRobot() {
-	delete drive;
 	delete mainController;
-	delete flTalon;
-	delete frTalon;
-	delete rlTalon;
-	delete rrTalon;
+	delete driveSystem;
+	delete pickup;
+	delete baller;
+	delete lifter;
 }
 
 void IAMRobot::RobotInit(){
@@ -41,9 +37,10 @@ void IAMRobot::TeleopInit(){
 
 }
 void IAMRobot::TeleopPeriodic(){
-	drive->ArcadeDrive(mainController->GetY(Joystick::kLeftHand),mainController->GetX(Joystick::kRightHand),false);
-	SmartDashboard::PutNumber("Encoder1 Get:", driveEncoder1->Get());
-	SmartDashboard::PutNumber("Encoder2 Get:", driveEncoder2->Get());
+	driveSystem->ArcadeDriveStickSquare();
+	pickup->teleopGearLoop();
+	baller->TeleopBallLoop();
+	lifter->TeleopLoop();
 }
 void IAMRobot::TestPeriodic(){
 
