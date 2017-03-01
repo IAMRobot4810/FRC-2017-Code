@@ -12,7 +12,7 @@ Deadband::Deadband(double LowBound, double HighBound){
 	this->HighBound = HighBound;
 }
 double Deadband::ReturnBoundedValue(double value){
-	if(value<0 && value<=LowBound || value>0 && value>=HighBound){
+	if(value<=LowBound || value>=HighBound){
 		return value;
 	}else{
 		return 0;

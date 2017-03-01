@@ -37,15 +37,23 @@ DriveSystem::~DriveSystem() {
 
 
 void DriveSystem::ArcadeDriveStick(){
-	drive->ArcadeDrive(driveband->ReturnBoundedValue(controller->GetY(Joystick::kLeftHand)), driveband->ReturnBoundedValue(controller->GetX(Joystick::kRightHand)), false);
+		drive->ArcadeDrive(SpeedScale*driveband->ReturnBoundedValue(controller->GetY(Joystick::kLeftHand)), SpeedScale*driveband->ReturnBoundedValue(controller->GetX(Joystick::kRightHand)), false);
+
 }
 
 void DriveSystem::TankDriveStick(){
-	drive->TankDrive(driveband->ReturnBoundedValue(controller->GetY(Joystick::kLeftHand)),driveband->ReturnBoundedValue(controller->GetY(Joystick::kRightHand)),false);
+	drive->TankDrive(SpeedScale*driveband->ReturnBoundedValue(controller->GetY(Joystick::kLeftHand)),SpeedScale*driveband->ReturnBoundedValue(controller->GetY(Joystick::kRightHand)),false);
 }
 
 void DriveSystem::ArcadeDriveStickSquare(){
-	drive->ArcadeDrive(driveband->ReturnBoundedValue(controller->GetY(Joystick::kLeftHand)), driveband->ReturnBoundedValue(controller->GetX(Joystick::kRightHand)), true);
+	drive->ArcadeDrive(SpeedScale*driveband->ReturnBoundedValue(controller->GetY(Joystick::kLeftHand)), SpeedScale*driveband->ReturnBoundedValue(controller->GetX(Joystick::kRightHand)), true);
+
+	if(controller->GetPOV()==0){
+		drive->ArcadeDrive(-1,0,true);
+	}
+	else if(controller->GetPOV()==180){
+		drive->ArcadeDrive(1,0,true);
+	}
 }
 void DriveSystem::TankDriveStickSquare(){
 	drive->TankDrive(driveband->ReturnBoundedValue(controller->GetY(Joystick::kLeftHand)),driveband->ReturnBoundedValue(controller->GetY(Joystick::kRightHand)),true);

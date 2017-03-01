@@ -9,20 +9,22 @@
 #define SRC_SYSTEMS_GEARPICKUP_H_
 #include "WPILib.h"
 #include "util/DeviceIDs.h"
+#include "systems/Constants.h"
 using namespace frc;
 
 class GearPickup {
 public:
 	GearPickup(XboxController* controller);
 	virtual ~GearPickup();
-	Solenoid* liftSolenoid;
-	Solenoid* clampSolenoid;
+	DoubleSolenoid* liftSolenoid;
+	DoubleSolenoid* clampSolenoid;
 	XboxController* controller;
+	DigitalInput* banner;
 	void teleopGearLoop();
-	bool isliftSolenoid = true;
-	bool isclampSolenoid = true;
-	bool yButtonPressed = false;
-	bool xButtonPressed = false;
+	void teleopGearLoopMod();
+	bool liftSolenoidToggle = true;
+	bool clampSolenoidToggle = true;
+	void teleopGearLoopMod2();
 
 };
 
