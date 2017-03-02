@@ -25,7 +25,7 @@ enum DriveIDs {
 	frTalID = 4,
 	rrTalID = 5,
 	flEncID = 0,
-	frEncID = 1,
+	frEncID = 3,
 	gyroID
 };
 

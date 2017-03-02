@@ -22,7 +22,8 @@ Auto::~Auto(){
 void Auto::AutonRun(bool sensors){
 	if(sensors == true){
 		//drv->DistanceStraightDrive(0.75, 9.5);
-		gr->openClaw();
+		drv->TimeStraightDrive(-0.5, 5.0);
+		//gr->openClaw();
 	}
 	else{
 	}

@@ -51,9 +51,10 @@ public:
 	XboxController* control1;
 	XboxController* control2;
 	Teleop* tlp;
-	//Auto* ato;
+	Auto* ato;
 	DigitalInput* gearSensor;
 	DigitalInput* pegSensor;
+	CameraServer* cammy;
 
 	void RobotInit();
 	void AutonomousInit() override;
@@ -64,10 +65,17 @@ public:
 
 private:
 	LiveWindow *lw = LiveWindow::GetInstance();
-	SendableChooser<std::string> chooser;
+	SendableChooser<std::string> autoChooser;
 	const std::string autoNameDefault = "Default";
 	const std::string autoNameCustom = "My Auto";
 	std::string autoSelected;
+
+	SendableChooser<std::string> teleChooser;
+	const std::string teleNameDefault = "2 Controller with Sensors";
+	const std::string teleName1s = "1 Controller with Sensors";
+	const std::string teleName1ns = "1 Controller with no Sensors";
+	const std::string teleName2ns = "2 Controller with no Sensors";
+	std::string teleSelected;
 
 protected:
 

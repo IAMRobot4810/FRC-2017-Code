@@ -33,6 +33,7 @@ public:
 	void TankControllerDrive(double leftSpeed, double rightSpeed);
 	void ArcadeControllerDrive(double moveSpeed, double turnSpeed);
 	void TimeStraightDrive(double driveSpeed, double driveSeconds);
+	void TimeRotateDrive(double driveSpeed, double driveSeconds);
 	double EncoderScale(int encoderReading, double wheelDiameterInches);
 	void DistanceStraightDrive(double positiveDriveSpeed, double driveFeet);
 	void RotateDrive(double positiveDriveSpeed, double driveDegrees, bool reInitializeGyro);

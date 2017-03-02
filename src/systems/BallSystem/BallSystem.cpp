@@ -30,6 +30,8 @@ void BallSystem::RaiseWall(){
 }
 
 void BallSystem::LowerWall(){
+	b2Tl->Set(0.25);
 	blSl->Set(DoubleSolenoid::kForward);
 	wallRaised = false;
+	b2Tl->StopMotor();
 }

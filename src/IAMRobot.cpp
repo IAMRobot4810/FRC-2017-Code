@@ -31,7 +31,8 @@ IAMRobot::IAMRobot(){
 	control1 = new XboxController(controller1ID);
 	control2 = new XboxController(controller2ID);
 	tlp = new Teleop(control1, control2, drive, gear, gearSensor, pegSensor, climb, ball);
-	//ato = new Auto(drive, gear, gearSensor, pegSensor);
+	ato = new Auto(drive, gear, gearSensor, pegSensor);
+	cammy = CameraServer::GetInstance();
 }
 
 IAMRobot::~IAMRobot(){
@@ -47,7 +48,7 @@ IAMRobot::~IAMRobot(){
 	delete control1;
 	delete control2;
 	delete tlp;
-	//delete ato;
+	delete ato;
 	delete gearSensor;
 	delete pegSensor;
 	delete climbRoller;
@@ -63,13 +64,15 @@ IAMRobot::~IAMRobot(){
 }
 
 void IAMRobot::RobotInit() {
-	chooser.AddDefault(autoNameDefault, autoNameDefault);
-	chooser.AddObject(autoNameCustom, autoNameCustom);
-	SmartDashboard::PutData("Auto Modes", &chooser);
+	autoChooser.AddDefault(autoNameDefault, autoNameDefault);
+	autoChooser.AddObject(autoNameCustom, autoNameCustom);
+	SmartDashboard::PutData("Auto Modes", &autoChooser);
+
+	cammy->StartAutomaticCapture(0);
 }
 
 void IAMRobot::AutonomousInit(){
-	autoSelected = chooser.GetSelected();
+	autoSelected = autoChooser.GetSelected();
 	std::string autoSelected = SmartDashboard::GetString("Auto Selector", autoNameDefault);
 	std::cout << "Auto selected: " << autoSelected << std::endl;
 
@@ -90,11 +93,45 @@ void IAMRobot::AutonomousPeriodic() {
 }
 
 void IAMRobot::TeleopInit() {
+	teleChooser.AddDefault(teleNameDefault, teleNameDefault);
+	teleChooser.AddObject(teleName2ns, teleName2ns);
+	teleChooser.AddObject(teleName1s, teleName1s);
+	teleChooser.AddObject(teleName2ns, teleName1ns);
+	SmartDashboard::PutData("Teleop Modes", &teleChooser);
 
+	teleSelected = teleChooser.GetSelected();
+	std::string teleSelected = SmartDashboard::GetString("Teleop Selector", teleNameDefault);
+	std::cout << "Teleop selected: " << teleSelected << std::endl;
+
+	if(teleSelected == teleName1s) {
+		// Custom Auto goes here
+	}
+	else if(teleSelected == teleName1ns){
+
+	}
+	else if(teleSelected == teleName2ns){
+
+	}
+	else {
+		// Default Auto goes here
+	}
 }
 
 void IAMRobot::TeleopPeriodic() {
-	tlp->TeleopRun(true);
+	/*if(teleSelected == teleName1s) {
+		tlp->TeleopRun(Teleop::OneContSensors);
+	}
+	else if(teleSelected == teleName1ns){
+		tlp->TeleopRun(Teleop::OneContNoSensors);
+	}
+	else if(teleSelected == teleName2ns){
+		tlp->TeleopRun(Teleop::TwoContNoSensors);
+	}
+	else {
+		tlp->TeleopRun(Teleop::TwoContSensors);
+	}*/
+
+	tlp->TeleopRun(Teleop::TwoContSensors);
 }
 
 void IAMRobot::TestPeriodic() {

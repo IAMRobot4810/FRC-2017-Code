@@ -10,8 +10,8 @@
 
 //Controls
 const double stickDeadband = 0.25;
-const double stickOutSlope = 0.66666666666666666;
-const double stickOutIntercept = -0.1666666666666;
+const double stickOutSlope = 1;
+const double stickOutIntercept = -0.25;
 const double turnStickOutSlope = 0.5;
 const double turnStickOutIntercept = -0.125;
 const double trigDeadband = 0.0;

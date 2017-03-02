@@ -33,6 +33,16 @@ void DriveSystem::TimeStraightDrive(double driveSpeed, double driveSeconds){
 		drov->ArcadeDrive(driveSpeed, 0.0, false);
 		Wait(0.01);
 	}
+	drov->ArcadeDrive(0.0, 0.0, false);
+}
+
+void DriveSystem::TimeRotateDrive(double driveSpeed, double driveSeconds){
+	drov->SetSafetyEnabled(false);
+	for(int i = 0; i <= driveSeconds*100; i++){
+		drov->ArcadeDrive(0.0, driveSpeed, false);
+		Wait(0.01);
+	}
+	drov->ArcadeDrive(0.0, 0.0, false);
 }
 
 double DriveSystem::EncoderScale(int encoderReading, double wheelDiameterInches){

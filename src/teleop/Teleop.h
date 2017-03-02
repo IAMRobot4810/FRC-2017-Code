@@ -26,7 +26,14 @@ public:
 			ClimbSystem* climbSystem, BallSystem* ballSystem);
 	~Teleop();
 
-	void TeleopRun(bool sensors);
+	enum teleopMode{
+		OneContNoSensors = 0,
+		TwoContNoSensors = 1,
+		OneContSensors = 2,
+		TwoContSensors = 3
+	};
+
+	void TeleopRun(teleopMode teleMode);
 
 private:
 	DriveSystem* drv;
@@ -42,9 +49,11 @@ private:
 
 	bool a1Toggle;
 	bool b1Toggle;
-	bool y1Toggle;
-	bool lBumpToggle;
-	bool rBumpToggle;
+	bool y2Toggle;
+	bool l1BumpToggle;
+	bool r1BumpToggle;
+	bool l2BumpToggle;
+	bool r2BumpToggle;
 	bool manualClaw;
 
 protected:
