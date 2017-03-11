@@ -16,7 +16,8 @@ IAMRobot::IAMRobot(){
 	gearRaiseNoid = new DoubleSolenoid(pcmID, raiseNoidForwardID, raiseNoidReverseID);
 	gear = new GearSystem(gearRaiseNoid, gearClawNoid);
 	gearSensor = new DigitalInput(gearSensorID);
-	pegSensor = new DigitalInput(pegSensorID);
+	pegSensor1 = new DigitalInput(pegSensor1ID);
+	pegSensor2 = new DigitalInput(pegSensor2ID);
 
 	climbRoller = new CANTalon(rollerTalID);
 	climbLeft = new CANTalon(intake1TalID);
@@ -30,9 +31,13 @@ IAMRobot::IAMRobot(){
 
 	control1 = new XboxController(controller1ID);
 	control2 = new XboxController(controller2ID);
-	tlp = new Teleop(control1, control2, drive, gear, gearSensor, pegSensor, climb, ball);
-	ato = new Auto(drive, gear, gearSensor, pegSensor);
+	tlp = new Teleop(control1, control2, drive, gear, gearSensor, pegSensor1, pegSensor2, climb, ball);
+	ato = new Auto(drive, gear, gearSensor, pegSensor1, pegSensor2);
 	cammy = CameraServer::GetInstance();
+
+	rLED = new Relay(rLEDID, Relay::kBothDirections);
+	gLED = new Relay(gLEDID, Relay::kBothDirections);
+	bLED = new Relay(bLEDID, Relay::kBothDirections);
 }
 
 IAMRobot::~IAMRobot(){
@@ -50,7 +55,8 @@ IAMRobot::~IAMRobot(){
 	delete tlp;
 	delete ato;
 	delete gearSensor;
-	delete pegSensor;
+	delete pegSensor1;
+	delete pegSensor2;
 	delete climbRoller;
 	delete climbLeft;
 	delete climbRight;
@@ -61,6 +67,9 @@ IAMRobot::~IAMRobot(){
 	delete ball;
 	delete flEncoder;
 	delete frEncoder;
+	delete rLED;
+	delete gLED;
+	delete bLED;
 }
 
 void IAMRobot::RobotInit() {
@@ -68,7 +77,7 @@ void IAMRobot::RobotInit() {
 	autoChooser.AddObject(autoNameCustom, autoNameCustom);
 	SmartDashboard::PutData("Auto Modes", &autoChooser);
 
-	cammy->StartAutomaticCapture(0);
+	cammy->StartAutomaticCapture(camera1ID);
 }
 
 void IAMRobot::AutonomousInit(){
@@ -76,12 +85,14 @@ void IAMRobot::AutonomousInit(){
 	std::string autoSelected = SmartDashboard::GetString("Auto Selector", autoNameDefault);
 	std::cout << "Auto selected: " << autoSelected << std::endl;
 
-	if (autoSelected == autoNameCustom) {
+	/*if (autoSelected == autoNameCustom) {
 		// Custom Auto goes here
+		ato->AutonRun(true);
 	} else {
 		// Default Auto goes here
-	}
-	//ato->AutonRun(true);
+		ato->AutonRun(false);
+	}*/
+	ato->AutonRun(true);
 }
 
 void IAMRobot::AutonomousPeriodic() {
@@ -132,10 +143,26 @@ void IAMRobot::TeleopPeriodic() {
 	}*/
 
 	tlp->TeleopRun(Teleop::TwoContSensors);
+	/*if(gearSensor->Get()){
+		bLED->Set(Relay::kOff);
+		rLED->Set(Relay::kReverse);
+	}
+	else{
+		bLED->Set(Relay::kReverse);
+		rLED->Set(Relay::kOff);
+	}*/
 }
 
 void IAMRobot::TestPeriodic() {
 
+}
+
+void IAMRobot::DisabledInit(){
+	gear->raiseClaw();
+}
+
+void IAMRobot::DisabledPeriodic(){
+	gear->raiseClaw();
 }
 
 START_ROBOT_CLASS(IAMRobot)

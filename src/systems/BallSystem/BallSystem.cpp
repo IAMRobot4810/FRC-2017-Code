@@ -20,7 +20,7 @@ BallSystem::~BallSystem(){
 }
 
 void BallSystem::SpinPickup(double speed){
-	b1Tl->Set(speed);
+	b1Tl->Set(-speed);
 	b2Tl->Set(-speed);
 }
 

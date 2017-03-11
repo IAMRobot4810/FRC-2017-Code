@@ -53,8 +53,12 @@ public:
 	Teleop* tlp;
 	Auto* ato;
 	DigitalInput* gearSensor;
-	DigitalInput* pegSensor;
+	DigitalInput* pegSensor1;
+	DigitalInput* pegSensor2;
 	CameraServer* cammy;
+	Relay* rLED;
+	Relay* gLED;
+	Relay* bLED;
 
 	void RobotInit();
 	void AutonomousInit() override;
@@ -62,12 +66,14 @@ public:
 	void TeleopInit();
 	void TeleopPeriodic();
 	void TestPeriodic();
+	void DisabledInit();
+	void DisabledPeriodic();
 
 private:
 	LiveWindow *lw = LiveWindow::GetInstance();
 	SendableChooser<std::string> autoChooser;
 	const std::string autoNameDefault = "Default";
-	const std::string autoNameCustom = "My Auto";
+	const std::string autoNameCustom = "Gear Auto";
 	std::string autoSelected;
 
 	SendableChooser<std::string> teleChooser;

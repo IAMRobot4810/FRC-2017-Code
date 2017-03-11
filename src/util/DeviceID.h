@@ -10,8 +10,12 @@
 
 enum GeneralIDs {
 	gearSensorID = 0,
-	pegSensorID = 1,
-	camera1ID
+	pegSensor1ID = 1,
+	pegSensor2ID = 2,
+	camera1ID = 0,
+	rLEDID = 0,
+	gLEDID = 1,
+	bLEDID = 2
 };
 
 enum ControllerIDs {
@@ -20,19 +24,19 @@ enum ControllerIDs {
 };
 
 enum DriveIDs {
-	flTalID = 1,
-	rlTalID = 2,
-	frTalID = 4,
-	rrTalID = 5,
+	flTalID = 5,
+	rlTalID = 3,
+	frTalID = 2,
+	rrTalID = 1,
 	flEncID = 0,
 	frEncID = 3,
 	gyroID
 };
 
 enum ClimberIDs {
-	rollerTalID = 3,
+	rollerTalID = 9,
 	intake1TalID = 7,
-	intake2TalID = 6
+	intake2TalID = 8
 };
 
 enum GearIDs {
@@ -44,8 +48,8 @@ enum GearIDs {
 };
 
 enum BallIDs {
-	ballPick1TalID = 9,
-	ballPick2TalID = 8,
+	ballPick1TalID = 6,
+	ballPick2TalID = 4,
 	ballSolForwardID = 4,
 	ballSolReverseID = 5
 };

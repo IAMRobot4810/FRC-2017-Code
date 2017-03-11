@@ -20,8 +20,8 @@ ClimbSystem::~ClimbSystem(){
 }
 
 void ClimbSystem::IntakeRope(double speed){
-	lInTal->Set(speed);
-	rInTal->Set(-speed);
+	lInTal->Set(-speed);
+	rInTal->Set(speed);
 }
 
 void ClimbSystem::Climb(double speed){
@@ -33,7 +33,7 @@ void ClimbSystem::Climb(double speed){
 
 void ClimbSystem::Home(double pos){
 	clmbTl->SetControlMode(CANTalon::kPosition);
-	//clmbTl->SetPID(0.7, 0.0, 0.0);
+	clmbTl->SetP(0.12);
 	clmbTl->EnableControl();
 	clmbTl->Set(0.0);
 }

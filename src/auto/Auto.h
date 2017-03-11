@@ -16,16 +16,17 @@ class Auto {
 
 public:
 	Auto(DriveSystem* driveSystem, GearSystem* gearSystem, DigitalInput* gearDetectSensor,
-			DigitalInput* pegDetectSensor);
+			DigitalInput* pegDetectSensor1, DigitalInput* pegDetectSensor2);
 	~Auto();
 
-	void AutonRun(bool sensors);
+	void AutonRun(bool gear);
 
 private:
 	DriveSystem* drv;
 	GearSystem* gr;
 	DigitalInput* gDetect;
-	DigitalInput* pDetect;
+	DigitalInput* pDetect1;
+	DigitalInput* pDetect2;
 
 protected:
 

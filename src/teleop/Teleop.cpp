@@ -7,8 +7,8 @@
 #include <teleop/Teleop.h>
 
 Teleop::Teleop(XboxController* controller1, XboxController* controller2, DriveSystem* driveSystem,
-		GearSystem* gearSystem, DigitalInput* gearDetectSensor, DigitalInput* pegDetectSensor,
-		ClimbSystem* climbSystem, BallSystem* ballSystem):
+		GearSystem* gearSystem, DigitalInput* gearDetectSensor, DigitalInput* pegDetectSensor1,
+		DigitalInput* pegDetectSensor2, ClimbSystem* climbSystem, BallSystem* ballSystem):
 
 		a1Toggle(true),
 		b1Toggle(true),
@@ -25,7 +25,8 @@ Teleop::Teleop(XboxController* controller1, XboxController* controller2, DriveSy
 	cont1 = controller1;
 	cont2 = controller2;
 	gDetect = gearDetectSensor;
-	pDetect = pegDetectSensor;
+	pDetect1 = pegDetectSensor1;
+	pDetect2 = pegDetectSensor2;
 	dBand = new Deadband();
 	scale = new Scaler();
 	clb = climbSystem;
@@ -247,10 +248,10 @@ void Teleop::TeleopRun(teleopMode teleMode){
 			drv->ArcadeControllerDrive(1.0, 0.0);
 		}
 
-		SmartDashboard::PutNumber("Enc1SpeedVal", drv->flE->GetSpeed());
+		/*SmartDashboard::PutNumber("Enc1SpeedVal", drv->flE->GetSpeed());
 		SmartDashboard::PutNumber("Enc1PosVal", drv->flE->GetRaw());
 		SmartDashboard::PutNumber("Enc2SpeedVal", drv->frE->GetSpeed());
-		SmartDashboard::PutNumber("Enc2PosVal", drv->frE->GetRaw());
+		SmartDashboard::PutNumber("Enc2PosVal", drv->frE->GetRaw());*/
 
 		if(cont1->GetBumper(GenericHID::kRightHand) && r1BumpToggle){
 			r1BumpToggle = false;
@@ -298,6 +299,22 @@ void Teleop::TeleopRun(teleopMode teleMode){
 		else{
 			cont1->SetRumble(GenericHID::kRightRumble, 0.0);
 		}
+
+		if(cont1->GetBButton() && b1Toggle){
+			b1Toggle = false;
+			manualClaw = true;
+			if(gr->raised == true){
+				gr->lowerClaw();
+			}
+			else {
+				gr->raiseClaw();
+			}
+			SmartDashboard::PutBoolean("clawRaised?", gr->raised);
+		}
+		else if(cont1->GetBButton() == false){
+			b1Toggle = true;
+		}
+
 		/*if(gDetect->Get()){
 			cont1->SetRumble(GenericHID::kRightRumble, 0.0);
 		}
@@ -348,10 +365,10 @@ void Teleop::TeleopRun(teleopMode teleMode){
 		}
 
 		if(bll->wallRaised == false){
-			bll->SpinPickup(cont2->GetTriggerAxis(GenericHID::kLeftHand)/1.5);
+			bll->SpinPickup(cont2->GetTriggerAxis(GenericHID::kLeftHand)*0.85);
 		}
 		else{
-			bll->SpinPickup(cont2->GetTriggerAxis(GenericHID::kLeftHand));
+			bll->SpinPickup(cont2->GetTriggerAxis(GenericHID::kLeftHand)/1.5);
 		}
 	}
 }

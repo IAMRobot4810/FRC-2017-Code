@@ -22,8 +22,8 @@ class Teleop {
 
 public:
 	Teleop(XboxController* controller1, XboxController* controller2, DriveSystem* driveSystem,
-			GearSystem* gearSystem, DigitalInput* gearDetectSensor, DigitalInput* pegDetectSensor,
-			ClimbSystem* climbSystem, BallSystem* ballSystem);
+			GearSystem* gearSystem, DigitalInput* gearDetectSensor, DigitalInput* pegDetectSensor1,
+			DigitalInput* pegDetectSensor2, ClimbSystem* climbSystem, BallSystem* ballSystem);
 	~Teleop();
 
 	enum teleopMode{
@@ -43,7 +43,8 @@ private:
 	Deadband* dBand;
 	Scaler* scale;
 	DigitalInput* gDetect;
-	DigitalInput* pDetect;
+	DigitalInput* pDetect1;
+	DigitalInput* pDetect2;
 	ClimbSystem* clb;
 	BallSystem* bll;
 
