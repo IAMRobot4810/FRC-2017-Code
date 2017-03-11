@@ -29,16 +29,21 @@ public:
 
 private:
 	XboxController *mainController;
+	XboxController *auxController;
 	DriveSystem* driveSystem;
 	GearPickup* pickup;
 	Ball_Pickup* baller;
 	Lifter* lifter;
+	Relay* rLED;
+	Relay* gLED;
+	Relay* bLED;
 	void RobotInit() override;
 	void AutonomousInit() override;
 	void AutonomousPeriodic() override;
 	void TeleopInit() override;
 	void TeleopPeriodic() override;
 	void TestPeriodic() override;
+	void DisableInit() override;
 
 };
 

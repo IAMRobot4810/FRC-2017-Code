@@ -28,6 +28,7 @@ public:
 	void RaiseElevator();
 	void LowElevator();
 	void TeleopBallLoopToggled();
+	void DualControlTeleop();
 };
 
 #endif /* SRC_SYSTEMS_BALLPICKUP_H_ */

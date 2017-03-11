@@ -25,7 +25,9 @@ public:
 	bool liftSolenoidToggle = true;
 	bool clampSolenoidToggle = true;
 	void teleopGearLoopMod2();
-
+	void teleopGearLoopSensor();
+	bool getIsGear();
+	bool clawControl = false;
 };
 
 #endif /* SRC_SYSTEMS_GEARPICKUP_H_ */

@@ -7,6 +7,7 @@ enum DriveID{
 	rlTalID = 2,
 	rrTalID = 5,
 	mainControllerID = 0,
+	auxID
 };
 
 enum SensorID{
@@ -15,7 +16,9 @@ enum SensorID{
 	frEncID1,
 	frEncID2,
 	gyroID,
-	BannerID
+	BannerID=0,
+	cameraID
+
 
 };
 
@@ -39,6 +42,12 @@ enum LifterID{
 	rightInRollerID=6,
 	lifterTalonID=3
 
+};
+
+enum LED{
+	rLEDID =0,
+	bLEDID=2,
+	gLEDID=1
 };
 
 

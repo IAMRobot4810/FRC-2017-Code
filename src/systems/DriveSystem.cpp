@@ -37,7 +37,14 @@ DriveSystem::~DriveSystem() {
 
 
 void DriveSystem::ArcadeDriveStick(){
-		drive->ArcadeDrive(SpeedScale*driveband->ReturnBoundedValue(controller->GetY(Joystick::kLeftHand)), SpeedScale*driveband->ReturnBoundedValue(controller->GetX(Joystick::kRightHand)), false);
+	drive->ArcadeDrive(SpeedScale*driveband->ReturnBoundedValue(controller->GetY(Joystick::kLeftHand)), SpeedScale*driveband->ReturnBoundedValue(controller->GetX(Joystick::kRightHand)), false);
+
+	if(controller->GetPOV()==0){
+		drive->ArcadeDrive(-1,0,false);
+	}
+	else if(controller->GetPOV()==180){
+		drive->ArcadeDrive(1,0,false);
+	}
 
 }
 
@@ -57,5 +64,14 @@ void DriveSystem::ArcadeDriveStickSquare(){
 }
 void DriveSystem::TankDriveStickSquare(){
 	drive->TankDrive(driveband->ReturnBoundedValue(controller->GetY(Joystick::kLeftHand)),driveband->ReturnBoundedValue(controller->GetY(Joystick::kRightHand)),true);
+}
+
+void DriveSystem::TimeDrive(){
+	drive->SetSafetyEnabled(false);
+	drive->ArcadeDrive(AutoDriveSpeed, false);
+	Wait(AutoTime);
+	drive->ArcadeDrive(0, false);
+	drive->SetSafetyEnabled(true);
+	drive->SetExpiration(0.1);
 }
 

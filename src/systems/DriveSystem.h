@@ -33,6 +33,7 @@ public:
 	void ArcadeDriveStickSquare();
 	void TankDriveStick();
 	void TankDriveStickSquare();
+	void TimeDrive();
 	Deadband* driveband;
 //private:
 

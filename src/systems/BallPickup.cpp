@@ -61,4 +61,26 @@ void Ball_Pickup::LowElevator(){
 	Ball_BackDoor->Set(DoubleSolenoid::Value::kReverse);
 }
 
+void Ball_Pickup::DualControlTeleop(){
+	if(control->GetBumper(GenericHID::kLeftHand) && elevatorToggle){
+		elevatorToggle = false;
+		if(Ball_BackDoor->Get() == DoubleSolenoid::Value::kForward){
+			LowElevator();
+		}
+		else {
+			RaiseElevator();
+		}
+	}
+	else if(control->GetBumper(GenericHID::kLeftHand) == false){
+		elevatorToggle = true;
+	}
+
+	if(control->GetTriggerAxis(GenericHID::kLeftHand)){
+			BallOutput(control->GetTriggerAxis(GenericHID::kLeftHand));
+	}
+	else{
+		BallOutput(0);
+	}
+}
+
 
