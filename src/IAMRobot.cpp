@@ -10,7 +10,7 @@ IAMRobot::IAMRobot(){
 	robotDrive = new RobotDrive(flTalon, rlTalon, frTalon, rrTalon);
 	flEncoder = new PWM(flEncID);
 	frEncoder = new PWM(frEncID);
-	drive = new DriveSystem(robotDrive, flEncoder, frEncoder, 0);
+	drive = new DriveSystem(robotDrive, 0);
 
 	gearClawNoid = new DoubleSolenoid(pcmID, clawNoidForwardID, clawNoidReverseID);
 	gearRaiseNoid = new DoubleSolenoid(pcmID, raiseNoidForwardID, raiseNoidReverseID);
@@ -19,15 +19,22 @@ IAMRobot::IAMRobot(){
 	pegSensor1 = new DigitalInput(pegSensor1ID);
 	pegSensor2 = new DigitalInput(pegSensor2ID);
 
-	climbRoller = new CANTalon(rollerTalID);
-	climbLeft = new CANTalon(intake1TalID);
-	climbRight = new CANTalon(intake2TalID);
-	climb = new ClimbSystem(climbRoller, climbLeft, climbRight);
+	climb1Roller = new CANTalon(roller1TalID);
+	climb2Roller = new CANTalon(roller2TalID);
+	climb = new ClimbSystem(climb1Roller, climb2Roller);
 
-	ballWall1Tal = new CANTalon(ballPick1TalID);
-	ballWall2Tal = new CANTalon(ballPick2TalID);
-	pickupSol = new DoubleSolenoid(pcmID, ballSolForwardID, ballSolReverseID);
-	ball = new BallSystem(ballWall1Tal, ballWall2Tal, pickupSol);
+	feedingTal = new CANTalon(feederTalID);
+	pdp = new PowerDistributionPanel(1);
+	meteringTal = new CANTalon(meterTalID);
+	shooterTal = new CANTalon(shooterTalID);
+	shooterTal->SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
+	shooterTal->SetTalonControlMode(CANTalon::kSpeedMode);
+	shooterTal->SetInverted(true);
+	shooterTal->SetEncPosition(0);
+	shooterTal->SetPID(0.0, 0.0, 0.0, 0.02);
+	shooterTal->SetPosition(0.0);
+	shooterTal->EnableControl();
+	ball = new ShootSystem(feedingTal, meteringTal, shooterTal);
 
 	control1 = new XboxController(controller1ID);
 	control2 = new XboxController(controller2ID);
@@ -57,13 +64,13 @@ IAMRobot::~IAMRobot(){
 	delete gearSensor;
 	delete pegSensor1;
 	delete pegSensor2;
-	delete climbRoller;
-	delete climbLeft;
-	delete climbRight;
+	delete climb1Roller;
+	delete climb2Roller;
 	delete climb;
-	delete ballWall1Tal;
-	delete ballWall2Tal;
-	delete pickupSol;
+	delete feedingTal;
+	delete pdp;
+	delete meteringTal;
+	delete shooterTal;
 	delete ball;
 	delete flEncoder;
 	delete frEncoder;
@@ -92,7 +99,7 @@ void IAMRobot::AutonomousInit(){
 		// Default Auto goes here
 		ato->AutonRun(false);
 	}*/
-	ato->AutonRun(true);
+	ato->AutoInitialize();
 }
 
 void IAMRobot::AutonomousPeriodic() {
@@ -101,6 +108,7 @@ void IAMRobot::AutonomousPeriodic() {
 	} else {
 		// Default Auto goes here
 	}
+	ato->AutonRun(true);
 }
 
 void IAMRobot::TeleopInit() {
@@ -143,6 +151,10 @@ void IAMRobot::TeleopPeriodic() {
 	}*/
 
 	tlp->TeleopRun(Teleop::TwoContSensors);
+	SmartDashboard::PutNumber("shootSpeed", shooterTal->GetSpeed());
+	SmartDashboard::PutNumber("shootVel", shooterTal->GetEncVel());
+	SmartDashboard::PutNumber("shootVolt", shooterTal->GetBusVoltage());
+	SmartDashboard::PutNumber("blendCurrent", pdp->GetCurrent(3));
 	/*if(gearSensor->Get()){
 		bLED->Set(Relay::kOff);
 		rLED->Set(Relay::kReverse);

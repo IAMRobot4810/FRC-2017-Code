@@ -7,33 +7,17 @@
 
 #include <systems/ClimbSystem/ClimbSystem.h>
 
-ClimbSystem::ClimbSystem(CANTalon* climbTalon, CANTalon* leftIntakeTalon, CANTalon* rightIntakeTalon){
-	clmbTl = climbTalon;
-	rInTal = rightIntakeTalon;
-	lInTal = leftIntakeTalon;
-
-	clmbTl->SetFeedbackDevice(CANTalon::CtreMagEncoder_Absolute);
+ClimbSystem::ClimbSystem(CANTalon* climb1Talon, CANTalon* climb2Talon){
+	clmb1Tl = climb1Talon;
+	clmb2Tl = climb2Talon;
 }
 
 ClimbSystem::~ClimbSystem(){
 
 }
 
-void ClimbSystem::IntakeRope(double speed){
-	lInTal->Set(-speed);
-	rInTal->Set(speed);
-}
-
 void ClimbSystem::Climb(double speed){
-	clmbTl->SetControlMode(CANTalon::kPercentVbus);
-	clmbTl->EnableControl();
-	clmbTl->Set(-speed);
+	clmb1Tl->Set(-speed);
+	clmb2Tl->Set(speed);
 
-}
-
-void ClimbSystem::Home(double pos){
-	clmbTl->SetControlMode(CANTalon::kPosition);
-	clmbTl->SetP(0.12);
-	clmbTl->EnableControl();
-	clmbTl->Set(0.0);
 }

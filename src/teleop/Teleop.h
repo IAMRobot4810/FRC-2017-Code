@@ -16,14 +16,14 @@
 #include <XboxController.h>
 #include <SmartDashboard/SmartDashboard.h>
 #include <systems/ClimbSystem/ClimbSystem.h>
-#include <Systems/BallSystem/BallSystem.h>
+#include <systems/ShootSystem/ShootSystem.h>
 
 class Teleop {
 
 public:
 	Teleop(XboxController* controller1, XboxController* controller2, DriveSystem* driveSystem,
 			GearSystem* gearSystem, DigitalInput* gearDetectSensor, DigitalInput* pegDetectSensor1,
-			DigitalInput* pegDetectSensor2, ClimbSystem* climbSystem, BallSystem* ballSystem);
+			DigitalInput* pegDetectSensor2, ClimbSystem* climbSystem, ShootSystem* shootSystem);
 	~Teleop();
 
 	enum teleopMode{
@@ -46,10 +46,11 @@ private:
 	DigitalInput* pDetect1;
 	DigitalInput* pDetect2;
 	ClimbSystem* clb;
-	BallSystem* bll;
+	ShootSystem* sht;
 
 	bool a1Toggle;
-	bool b1Toggle;
+	bool a2Toggle;
+	bool b2Toggle;
 	bool y2Toggle;
 	bool l1BumpToggle;
 	bool r1BumpToggle;

@@ -9,8 +9,8 @@
 #define SRC_UTIL_DEVICEID_H_
 
 enum GeneralIDs {
-	gearSensorID = 0,
-	pegSensor1ID = 1,
+	gearSensorID = 0, //0
+	pegSensor1ID = 1, //1
 	pegSensor2ID = 2,
 	camera1ID = 0,
 	rLEDID = 0,
@@ -24,34 +24,32 @@ enum ControllerIDs {
 };
 
 enum DriveIDs {
-	flTalID = 5,
-	rlTalID = 3,
-	frTalID = 2,
-	rrTalID = 1,
+	flTalID = 2, //5
+	rlTalID = 1, //3
+	frTalID = 4, //2
+	rrTalID = 5, //1
 	flEncID = 0,
 	frEncID = 3,
 	gyroID
 };
 
 enum ClimberIDs {
-	rollerTalID = 9,
-	intake1TalID = 7,
-	intake2TalID = 8
+	roller1TalID = 9,
+	roller2TalID = 8, //7
 };
 
 enum GearIDs {
 	pcmID = 1,
-	raiseNoidForwardID = 0,
-	raiseNoidReverseID = 1,
-	clawNoidForwardID = 2,
-	clawNoidReverseID = 3
+	raiseNoidForwardID = 3, //0
+	raiseNoidReverseID = 2, //1
+	clawNoidForwardID = 1, //2
+	clawNoidReverseID = 0 //3
 };
 
-enum BallIDs {
-	ballPick1TalID = 6,
-	ballPick2TalID = 4,
-	ballSolForwardID = 4,
-	ballSolReverseID = 5
+enum ShootIDs {
+	feederTalID = 6,
+	meterTalID = 7, //4
+	shooterTalID = 3 //4
 };
 
 #endif /* SRC_UTIL_DEVICEID_H_ */

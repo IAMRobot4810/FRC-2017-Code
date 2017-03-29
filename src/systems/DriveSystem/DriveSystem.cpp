@@ -1,10 +1,8 @@
 #include <systems/DriveSystem/DriveSystem.h>
 
-DriveSystem::DriveSystem(RobotDrive* roboDrive, PWM* leftEncoder, PWM* rightEncoder, AnalogGyro* gyro){
+DriveSystem::DriveSystem(RobotDrive* roboDrive, AnalogGyro* gyro){
 	drov = roboDrive;
 	gyr = gyro;
-	flE = leftEncoder;
-	frE = rightEncoder;
 	drov->SetSafetyEnabled(true);
 	drov->SetExpiration(0.1);
 	/*gyr->InitGyro();
@@ -29,11 +27,14 @@ void DriveSystem::ArcadeControllerDrive(double moveSpeed, double turnSpeed){
 
 void DriveSystem::TimeStraightDrive(double driveSpeed, double driveSeconds){
 	drov->SetSafetyEnabled(false);
-	for(int i = 0; i <= driveSeconds*100; i++){
+	/*for(int i = 0; i <= driveSeconds*100; i++){
 		drov->ArcadeDrive(driveSpeed, 0.0, false);
 		Wait(0.01);
-	}
+	}*/
+	drov->ArcadeDrive(driveSpeed, 0.0, false);
+	Wait(driveSeconds);
 	drov->ArcadeDrive(0.0, 0.0, false);
+	drov->SetSafetyEnabled(true);
 }
 
 void DriveSystem::TimeRotateDrive(double driveSpeed, double driveSeconds){
@@ -51,7 +52,7 @@ double DriveSystem::EncoderScale(int encoderReading, double wheelDiameterInches)
 	return wheelIncrement*wheelCircumference;
 }
 
-void DriveSystem::DistanceStraightDrive(double positiveDriveSpeed, double driveFeet){
+/*void DriveSystem::DistanceStraightDrive(double positiveDriveSpeed, double driveFeet){
 	drov->SetSafetyEnabled(false);
 	double travelDist = 0;
 	double rotations = 0;
@@ -80,7 +81,7 @@ void DriveSystem::DistanceStraightDrive(double positiveDriveSpeed, double driveF
 		}
 	}
 	drov->ArcadeDrive(0.0, 0.0, false);
-}
+}*/
 
 void DriveSystem::RotateDrive(double positiveDriveSpeed, double driveDegrees, bool reInitializeGyro){
 	drov->SetSafetyEnabled(false);
@@ -119,5 +120,9 @@ void DriveSystem::RotateDrive(double positiveDriveSpeed, double driveDegrees, bo
 			}
 		}
 	}
+}
+
+void DriveSystem::GearVisionDrive(double stopDist){
+
 }
 

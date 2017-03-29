@@ -11,6 +11,7 @@
 #include <systems/DriveSystem/DriveSystem.h>
 #include <systems/GearSystem/GearSystem.h>
 #include <DigitalInput.h>
+#include <SerialPort.h>
 
 class Auto {
 
@@ -19,6 +20,7 @@ public:
 			DigitalInput* pegDetectSensor1, DigitalInput* pegDetectSensor2);
 	~Auto();
 
+	void AutoInitialize();
 	void AutonRun(bool gear);
 
 private:
@@ -27,6 +29,13 @@ private:
 	DigitalInput* gDetect;
 	DigitalInput* pDetect1;
 	DigitalInput* pDetect2;
+	SerialPort* duino;
+
+	bool ingear = false;
+	char *buff;
+	int buffread1;
+	int buffread2;
+	int buffread3;
 
 protected:
 

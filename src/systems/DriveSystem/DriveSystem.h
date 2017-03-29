@@ -16,19 +16,19 @@
 #include <Timer.h>
 #include <cmath>
 #include <util/ConstantVals.h>
+#include <PIDSource.h>
+#include <PIDOutput.h>
 
 using namespace frc;
 
 class DriveSystem {
 
 public:
-	DriveSystem(RobotDrive* roboDrive, PWM* leftEncoder, PWM* rightEncoder, AnalogGyro* gyro);
+	DriveSystem(RobotDrive* roboDrive, AnalogGyro* gyro);
 	~DriveSystem();
 
 	RobotDrive* drov;
 	AnalogGyro* gyr;
-	PWM* flE;
-	PWM* frE;
 
 	void TankControllerDrive(double leftSpeed, double rightSpeed);
 	void ArcadeControllerDrive(double moveSpeed, double turnSpeed);
@@ -37,6 +37,7 @@ public:
 	double EncoderScale(int encoderReading, double wheelDiameterInches);
 	void DistanceStraightDrive(double positiveDriveSpeed, double driveFeet);
 	void RotateDrive(double positiveDriveSpeed, double driveDegrees, bool reInitializeGyro);
+	void GearVisionDrive(double stopDist);
 
 private:
 

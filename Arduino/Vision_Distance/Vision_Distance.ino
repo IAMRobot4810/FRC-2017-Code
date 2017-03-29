@@ -32,6 +32,7 @@ void loop() {
   if(blck){
     i++;
     if(i%10 == 0){
+      i = 0;
       if(blck < 2){
         xPos[0] = 0;
         xPos[1] = 0;
@@ -67,8 +68,14 @@ void loop() {
         pegDist = abs(xPos[1] - xPos[0]);
         wallDist = (1960/pegDist);
         bufr[0] = wallDist;
-        bufr[1] = heights[0];
-        bufr[2] = heights[1];
+        if(xPos[0] > xPos[1]){
+          bufr[1] = xPos[1];
+          bufr[2] = abs(319-xPos[0]);
+        }
+        else{
+          bufr[1] = xPos[0];
+          bufr[2] = abs(319-xPos[1]);
+        }
         Serial.write(bufr, 3);
         //Serial.println(wallDist);
       }

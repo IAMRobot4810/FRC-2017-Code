@@ -13,16 +13,13 @@
 class ClimbSystem{
 
 public:
-	ClimbSystem(CANTalon* climbTalon, CANTalon* leftIntakeTalon, CANTalon* rightIntakeTalon);
+	ClimbSystem(CANTalon* climb1Talon, CANTalon* climb2Talon);
 	~ClimbSystem();
 
-	CANTalon* clmbTl;
-	CANTalon* rInTal;
-	CANTalon* lInTal;
+	CANTalon* clmb1Tl;
+	CANTalon* clmb2Tl;
 
-	void IntakeRope(double speed);
 	void Climb(double speed);
-	void Home(double pos);
 
 private:
 

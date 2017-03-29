@@ -24,6 +24,7 @@
 #include <teleop/Teleop.h>
 #include <auto/Auto.h>
 #include <Relay.h>
+#include <PowerDistributionPanel.h>
 
 using namespace frc;
 
@@ -44,14 +45,14 @@ public:
 	DoubleSolenoid* gearClawNoid;
 	DoubleSolenoid* gearRaiseNoid;
 	GearSystem* gear;
-	CANTalon* climbRoller;
-	CANTalon* climbLeft;
-	CANTalon* climbRight;
+	CANTalon* climb1Roller;
+	CANTalon* climb2Roller;
 	ClimbSystem* climb;
-	CANTalon* ballWall1Tal;
-	CANTalon* ballWall2Tal;
-	DoubleSolenoid* pickupSol;
-	BallSystem* ball;
+	CANTalon* feedingTal;
+	PowerDistributionPanel* pdp;
+	CANTalon* meteringTal;
+	CANTalon* shooterTal;
+	ShootSystem* ball;
 	XboxController* control1;
 	XboxController* control2;
 	Teleop* tlp;
