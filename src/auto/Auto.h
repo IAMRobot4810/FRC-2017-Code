@@ -10,6 +10,7 @@
 
 #include <systems/DriveSystem/DriveSystem.h>
 #include <systems/GearSystem/GearSystem.h>
+#include <systems/ShootSystem/ShootSystem.h>
 #include <DigitalInput.h>
 #include <SerialPort.h>
 
@@ -17,18 +18,18 @@ class Auto {
 
 public:
 	Auto(DriveSystem* driveSystem, GearSystem* gearSystem, DigitalInput* gearDetectSensor,
-			DigitalInput* pegDetectSensor1, DigitalInput* pegDetectSensor2);
+			DigitalInput* pegDetectSensor1, ShootSystem* shootSystem);
 	~Auto();
 
-	void AutoInitialize();
-	void AutonRun(bool gear);
+	void AutoInitialize(bool ball);
+	void AutonRun(bool gear, bool sensor);
 
 private:
 	DriveSystem* drv;
 	GearSystem* gr;
 	DigitalInput* gDetect;
 	DigitalInput* pDetect1;
-	DigitalInput* pDetect2;
+	ShootSystem* sht;
 	SerialPort* duino;
 
 	bool ingear = false;

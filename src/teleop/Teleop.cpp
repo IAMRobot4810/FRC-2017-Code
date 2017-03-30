@@ -9,7 +9,7 @@
 
 Teleop::Teleop(XboxController* controller1, XboxController* controller2, DriveSystem* driveSystem,
 		GearSystem* gearSystem, DigitalInput* gearDetectSensor, DigitalInput* pegDetectSensor1,
-		DigitalInput* pegDetectSensor2, ClimbSystem* climbSystem, ShootSystem* shootSystem):
+		ClimbSystem* climbSystem, ShootSystem* shootSystem):
 
 		a1Toggle(true),
 		a2Toggle(true),
@@ -28,7 +28,6 @@ Teleop::Teleop(XboxController* controller1, XboxController* controller2, DriveSy
 	cont2 = controller2;
 	gDetect = gearDetectSensor;
 	pDetect1 = pegDetectSensor1;
-	pDetect2 = pegDetectSensor2;
 	dBand = new Deadband();
 	scale = new Scaler();
 	clb = climbSystem;
@@ -191,6 +190,12 @@ void Teleop::TeleopRun(teleopMode teleMode){
 				gr->openClaw();
 				if(gr->raised == false){
 					manualClaw = true;
+				}
+				else{
+					if(manualClaw == false){
+						Wait(0.75);
+						gr->lowerClaw();
+					}
 				}
 			}
 			SmartDashboard::PutBoolean("clawOpen?", gr->open);
