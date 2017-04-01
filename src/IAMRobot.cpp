@@ -28,12 +28,13 @@ IAMRobot::IAMRobot(){
 	meteringTal = new CANTalon(meterTalID);
 	shooterTal = new CANTalon(shooterTalID);
 	shooterTal->SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
-	shooterTal->SetTalonControlMode(CANTalon::kSpeedMode);
+	shooterTal->SetSensorDirection(false);
+	//shooterTal->SetTalonControlMode(CANTalon::kSpeedMode);
 	shooterTal->SetInverted(true);
-	shooterTal->SetEncPosition(0);
+	/*shooterTal->SetEncPosition(0);
 	shooterTal->SetPID(0.0, 0.0, 0.0, 0.02);
 	shooterTal->SetPosition(0.0);
-	shooterTal->EnableControl();
+	shooterTal->EnableControl();*/
 	ball = new ShootSystem(feedingTal, meteringTal, shooterTal);
 
 	control1 = new XboxController(controller1ID);
@@ -41,6 +42,7 @@ IAMRobot::IAMRobot(){
 	tlp = new Teleop(control1, control2, drive, gear, gearSensor, pegSensor1, climb, ball);
 	ato = new Auto(drive, gear, gearSensor, pegSensor1, ball);
 	cammy = CameraServer::GetInstance();
+	cammy2 = CameraServer::GetInstance();
 
 	rLED = new Relay(rLEDID, Relay::kBothDirections);
 	gLED = new Relay(gLEDID, Relay::kBothDirections);
@@ -85,6 +87,7 @@ void IAMRobot::RobotInit() {
 	SmartDashboard::PutData("Auto Modes", &autoChooser);
 
 	cammy->StartAutomaticCapture(camera1ID);
+	cammy2->StartAutomaticCapture(camera2ID);
 }
 
 void IAMRobot::AutonomousInit(){
@@ -99,7 +102,15 @@ void IAMRobot::AutonomousInit(){
 		// Default Auto goes here
 		ato->AutonRun(false);
 	}*/
-	ato->AutoInitialize(true);
+	//ato->AutoInitialize(false);
+	ball->SpinSequence(0.8, 1.0, 0.5, 1.0, 7.0);
+	drive->TimeStraightDrive(-0.3, 2.5);
+	/*Wait(0.5);
+	gear->openClaw();
+	gear->lowerClaw();
+	Wait(0.5);
+	drive->TimeStraightDrive(0.3, 2.5);
+	ball->SpinSequence(0.8, 1.0, 0.5, 1.0, 3.0);*/
 }
 
 void IAMRobot::AutonomousPeriodic() {
@@ -108,7 +119,7 @@ void IAMRobot::AutonomousPeriodic() {
 	} else {
 		// Default Auto goes here
 	}
-	ato->AutonRun(true, true);
+	//ato->AutonRun(true, false, true);
 }
 
 void IAMRobot::TeleopInit() {
@@ -134,6 +145,9 @@ void IAMRobot::TeleopInit() {
 	else {
 		// Default Auto goes here
 	}
+	ball->SpinShoot(0.0);
+	ball->SpinFeed(0.0);
+	ball->SpinMeter(0.0);
 }
 
 void IAMRobot::TeleopPeriodic() {

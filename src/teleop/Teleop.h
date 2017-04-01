@@ -49,13 +49,14 @@ private:
 
 	bool a1Toggle;
 	bool a2Toggle;
-	bool b2Toggle;
+	bool b1Toggle;
 	bool y2Toggle;
 	bool l1BumpToggle;
 	bool r1BumpToggle;
 	bool l2BumpToggle;
 	bool r2BumpToggle;
 	bool manualClaw;
+	int shooterSpeed = 5000;
 
 protected:
 

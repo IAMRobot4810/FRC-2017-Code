@@ -13,7 +13,7 @@ Teleop::Teleop(XboxController* controller1, XboxController* controller2, DriveSy
 
 		a1Toggle(true),
 		a2Toggle(true),
-		b2Toggle(true),
+		b1Toggle(true),
 		y2Toggle(true),
 		l1BumpToggle(true),
 		r1BumpToggle(true),
@@ -53,8 +53,8 @@ void Teleop::TeleopRun(teleopMode teleMode){
 			drv->ArcadeControllerDrive(1.0, 0.0);
 		}
 
-		if(cont2->GetBButton() && b2Toggle){
-			b2Toggle = false;
+		if(cont1->GetBButton() && b1Toggle){
+			b1Toggle = false;
 			if(gr->raised == true){
 				gr->lowerClaw();
 			}
@@ -64,7 +64,7 @@ void Teleop::TeleopRun(teleopMode teleMode){
 			SmartDashboard::PutBoolean("clawRaised?", gr->raised);
 		}
 		else if(cont1->GetBButton() == false){
-			b2Toggle = true;
+			b1Toggle = true;
 		}
 
 		if(cont1->GetAButton() && a1Toggle){
@@ -101,8 +101,8 @@ void Teleop::TeleopRun(teleopMode teleMode){
 			drv->ArcadeControllerDrive(1.0, 0.0);
 		}
 
-		if(cont2->GetBButton() && b2Toggle){
-			b2Toggle = false;
+		if(cont1->GetBButton() && b1Toggle){
+			b1Toggle = false;
 			if(gr->raised == true){
 				gr->lowerClaw();
 			}
@@ -113,7 +113,7 @@ void Teleop::TeleopRun(teleopMode teleMode){
 			SmartDashboard::PutBoolean("clawRaised?", gr->raised);
 		}
 		else if(cont1->GetBButton() == false){
-			b2Toggle = true;
+			b1Toggle = true;
 		}
 
 		if(cont1->GetAButton() && a1Toggle){
@@ -165,8 +165,8 @@ void Teleop::TeleopRun(teleopMode teleMode){
 			drv->ArcadeControllerDrive(1.0, 0.0);
 		}
 
-		if(cont2->GetBumper(GenericHID::kRightHand) && r2BumpToggle){
-			r2BumpToggle = false;
+		if(cont1->GetBumper(GenericHID::kRightHand) && r1BumpToggle){
+			r1BumpToggle = false;
 			if(gr->raised == true){
 				gr->lowerClaw();
 			}
@@ -176,32 +176,23 @@ void Teleop::TeleopRun(teleopMode teleMode){
 			}
 			SmartDashboard::PutBoolean("clawRaised?", gr->raised);
 		}
-		else if(cont2->GetBumper(GenericHID::kRightHand) == false){
-			r2BumpToggle = true;
+		else if(cont1->GetBumper(GenericHID::kRightHand) == false){
+			r1BumpToggle = true;
 		}
 
-		if(cont2->GetBumper(GenericHID::kLeftHand) && l2BumpToggle){
-			l2BumpToggle = false;
+		if(cont1->GetBumper(GenericHID::kLeftHand) && l1BumpToggle){
+			l1BumpToggle = false;
 			if(gr->open == true){
 				gr->closeClaw();
 				manualClaw = true;
 			}
 			else {
 				gr->openClaw();
-				if(gr->raised == false){
-					manualClaw = true;
-				}
-				else{
-					if(manualClaw == false){
-						Wait(0.75);
-						gr->lowerClaw();
-					}
-				}
 			}
 			SmartDashboard::PutBoolean("clawOpen?", gr->open);
 		}
-		else if(cont2->GetBumper(GenericHID::kLeftHand) == false){
-			l2BumpToggle = true;
+		else if(cont1->GetBumper(GenericHID::kLeftHand) == false){
+			l1BumpToggle = true;
 		}
 
 		SmartDashboard::PutBoolean("Gear?", !gDetect->Get());
@@ -218,8 +209,8 @@ void Teleop::TeleopRun(teleopMode teleMode){
 			cont1->SetRumble(GenericHID::kRightRumble, 0.0);
 		}
 
-		if(cont2->GetBButton() && b2Toggle){
-			b2Toggle = false;
+		if(cont1->GetBButton() && b1Toggle){
+			b1Toggle = false;
 			manualClaw = true;
 			if(gr->raised == true){
 				gr->lowerClaw();
@@ -229,18 +220,21 @@ void Teleop::TeleopRun(teleopMode teleMode){
 			}
 			SmartDashboard::PutBoolean("clawRaised?", gr->raised);
 		}
-		else if(cont2->GetBButton() == false){
-			b2Toggle = true;
+		else if(cont1->GetBButton() == false){
+			b1Toggle = true;
 		}
 
 		clb->Climb(cont2->GetTriggerAxis(GenericHID::kRightHand));
+
+
+		SmartDashboard::PutNumber("Shooter Power Factor", sht->powFactor);
+		sht->powFactor = SmartDashboard::GetNumber("Shooter Power Factor", 0.25);
+		SmartDashboard::PutNumber("Shooter Speed Factor", shooterSpeed);
+		shooterSpeed = SmartDashboard::GetNumber("Shooter Speed Factor", 5000);
+
 		if(cont2->GetAButton() && a2Toggle == true){
 			a2Toggle = false;
-			sht->SpinSequence(10000, 1.0, 0.5, 2.0);
-			Wait(5);
-			sht->SpinFeed(0.0);
-			sht->SpinMeter(0.0);
-			sht->SpinShoot(0.0);
+			sht->SpinSequence(0.3, 1.0, 0.5, 2.0, 7.0);
 		}
 		else if(!cont2->GetAButton()){
 			a2Toggle = true;

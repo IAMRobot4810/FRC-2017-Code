@@ -33,9 +33,43 @@ void ShootSystem::SpinFeed(double speed){
 	bfeed->Set(speed);
 }
 
-void ShootSystem::SpinSequence(double shootSpeed, double meterSpeed, double feedSpeed, double spinTime){
+void ShootSystem::SpinSequence(double shootSpeed, double meterSpeed, double feedSpeed, double spinTime, double shootTime){
+	/*
+	for(int i = 0; i < (spinTime*100); i++){
+		if(bshoot->GetSpeed()<shootSpeed){
+			bshoot->Set(pow(((shootSpeed - bshoot->GetSpeed())/shootSpeed), powFactor));
+		}else{
+			bshoot->Set(0);
+		}
+		Wait(0.1);
+	}
+	for(int i = 0; i < (shootTime*100); i++){
+		SpinMeter(meterSpeed);
+		SpinFeed(feedSpeed);
+		if(bshoot->GetSpeed()<shootSpeed){
+			bshoot->Set(pow(((shootSpeed - bshoot->GetSpeed())/shootSpeed), powFactor));
+		}else{
+			bshoot->Set(0);
+		}
+		Wait(0.1);
+	}
+	*/
+	/*if(bshoot->GetSpeed()<shootSpeed){
+		bshoot->Set(pow(((shootSpeed - bshoot->GetSpeed())/shootSpeed), powFactor));
+	}else if(){
+		bshoot->Set(0);
+	}
+	SpinMeter(0.0);
+	SpinFeed(0.0);
+	SpinShoot(0.0);*/
 	SpinShoot(shootSpeed);
 	Wait(spinTime);
 	SpinMeter(meterSpeed);
 	SpinFeed(feedSpeed);
+	Wait(shootTime);
+	SpinMeter(0.0);
+		SpinFeed(0.0);
+		SpinShoot(0.0);
+
+
 }

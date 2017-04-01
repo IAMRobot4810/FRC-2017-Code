@@ -16,6 +16,7 @@
 #include <Timer.h>
 #include <cmath>
 #include <util/ConstantVals.h>
+#include <SerialPort.h>
 #include <PIDSource.h>
 #include <PIDOutput.h>
 
@@ -29,6 +30,7 @@ public:
 
 	RobotDrive* drov;
 	AnalogGyro* gyr;
+	SerialPort* rioDuino;
 
 	void TankControllerDrive(double leftSpeed, double rightSpeed);
 	void ArcadeControllerDrive(double moveSpeed, double turnSpeed);

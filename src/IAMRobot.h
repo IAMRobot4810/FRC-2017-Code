@@ -61,6 +61,7 @@ public:
 	DigitalInput* pegSensor1;
 	DigitalInput* pegSensor2;
 	CameraServer* cammy;
+	CameraServer* cammy2;
 	Relay* rLED;
 	Relay* gLED;
 	Relay* bLED;

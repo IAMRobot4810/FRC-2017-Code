@@ -27,19 +27,21 @@ Auto::~Auto(){
 	delete buff;
 }
 
-void Auto::AutoInitialize(bool ball){
-	if(ball){
-		sht->SpinSequence(5000, 1.0, 0.5, 1.0);
-		Wait(0.5);
-		drv->TimeStraightDrive(-0.5, 1.25);
-		ingear = false;
+void Auto::AutoInitialize(int position){
+
+	if(position == 1){
+
+	}
+	else if(position == 3){
+
 	}
 	else{
-		drv->TimeStraightDrive(-0.5, 1.25);
-		ingear = false;
+		drv->TimeStraightDrive(-1.0, 0.55);
 	}
+	ingear = false;
+	backedup = false;
 }
-void Auto::AutonRun(bool gear, bool sensor){
+void Auto::AutonRun(bool gear, bool ball, bool sensor){
 	duino->Read(buff, 3);
 	buffread1 = (int) buff[0];
 	buffread2 = (int) buff[1];
@@ -97,6 +99,29 @@ void Auto::AutonRun(bool gear, bool sensor){
 					gr->openClaw();
 					Wait(0.75);
 					gr->lowerClaw();
+					if(!backedup){
+						drv->TimeStraightDrive(0.25, 0.35);
+						backedup = true;
+					}
+				}
+				else{
+					drv->TankControllerDrive(0.0, 0.0);
+				}
+
+				gr->openClaw();
+				Wait(0.75);
+				gr->lowerClaw();
+				if(!backedup){
+					drv->TimeStraightDrive(0.25, 0.35);
+					backedup = true;
+				}
+
+				if(ball && !ballDone){
+					drv->TimeStraightDrive(0.5, 1.0);
+					Wait(0.5);
+					sht->SpinSequence(5000, 1.0, 0.5, 1.0, 7.0);
+					Wait(0.5);
+					ballDone = true;
 				}
 				else{
 					drv->TankControllerDrive(0.0, 0.0);

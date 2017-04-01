@@ -27,7 +27,9 @@ public:
 	void SpinShoot(double speed);
 	void SpinMeter(double speed);
 	void SpinFeed(double speed);
-	void SpinSequence(double shootSpeed, double meterSpeed, double feedSpeed, double spinTime);
+	void SpinSequence(double shootSpeed, double meterSpeed, double feedSpeed, double spinTime, double shootTime);
+
+	double powFactor = 0.25;
 
 private:
 

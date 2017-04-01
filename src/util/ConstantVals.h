@@ -12,8 +12,8 @@
 const double stickDeadband = 0.25;
 const double stickOutSlope = 1;
 const double stickOutIntercept = -0.25;
-const double turnStickOutSlope = 0.75;
-const double turnStickOutIntercept = -0.1875;
+const double turnStickOutSlope = 0.6;
+const double turnStickOutIntercept = -0.15;
 const double trigDeadband = 0.0;
 const double trigOutSlope = 1.0;
 const double trigOutIntercept = 0.0;

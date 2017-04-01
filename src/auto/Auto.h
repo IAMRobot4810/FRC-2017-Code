@@ -21,8 +21,8 @@ public:
 			DigitalInput* pegDetectSensor1, ShootSystem* shootSystem);
 	~Auto();
 
-	void AutoInitialize(bool ball);
-	void AutonRun(bool gear, bool sensor);
+	void AutoInitialize(int position = 2);
+	void AutonRun(bool gear, bool ball, bool sensor);
 
 private:
 	DriveSystem* drv;
@@ -33,6 +33,8 @@ private:
 	SerialPort* duino;
 
 	bool ingear = false;
+	bool ballDone = false;
+	bool backedup = false;
 	char *buff;
 	int buffread1;
 	int buffread2;

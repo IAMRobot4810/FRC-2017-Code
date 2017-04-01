@@ -81,7 +81,7 @@ double DriveSystem::EncoderScale(int encoderReading, double wheelDiameterInches)
 		}
 	}
 	drov->ArcadeDrive(0.0, 0.0, false);
-}*/
+}
 
 void DriveSystem::RotateDrive(double positiveDriveSpeed, double driveDegrees, bool reInitializeGyro){
 	drov->SetSafetyEnabled(false);
@@ -120,7 +120,7 @@ void DriveSystem::RotateDrive(double positiveDriveSpeed, double driveDegrees, bo
 			}
 		}
 	}
-}
+}*/
 
 void DriveSystem::GearVisionDrive(double stopDist){
 
