@@ -17,7 +17,7 @@ ClimbSystem::~ClimbSystem(){
 }
 
 void ClimbSystem::Climb(double speed){
-	clmb1Tl->Set(speed);
-	clmb2Tl->Set(-speed);
+	clmb1Tl->Set(-speed);
+	clmb2Tl->Set(speed);
 
 }

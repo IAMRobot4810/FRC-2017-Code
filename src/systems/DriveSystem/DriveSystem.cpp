@@ -1,12 +1,9 @@
 #include <systems/DriveSystem/DriveSystem.h>
 
-DriveSystem::DriveSystem(RobotDrive* roboDrive, AnalogGyro* gyro){
+DriveSystem::DriveSystem(RobotDrive* roboDrive){
 	drov = roboDrive;
-	gyr = gyro;
 	drov->SetSafetyEnabled(true);
 	drov->SetExpiration(0.1);
-	/*gyr->InitGyro();
-	gyr->Calibrate();*/
 }
 
 DriveSystem::~DriveSystem(){

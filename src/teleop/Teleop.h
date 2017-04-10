@@ -26,14 +26,8 @@ public:
 			ClimbSystem* climbSystem, ShootSystem* shootSystem);
 	~Teleop();
 
-	enum teleopMode{
-		OneContNoSensors = 0,
-		TwoContNoSensors = 1,
-		OneContSensors = 2,
-		TwoContSensors = 3
-	};
-
-	void TeleopRun(teleopMode teleMode);
+	void TeleopTwoController(bool sensors);
+	void TeleopOneController(bool sensors);
 
 private:
 	DriveSystem* drv;

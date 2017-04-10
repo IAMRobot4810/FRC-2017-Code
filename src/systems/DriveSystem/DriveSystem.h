@@ -25,12 +25,10 @@ using namespace frc;
 class DriveSystem {
 
 public:
-	DriveSystem(RobotDrive* roboDrive, AnalogGyro* gyro);
+	DriveSystem(RobotDrive* roboDrive);
 	~DriveSystem();
 
 	RobotDrive* drov;
-	AnalogGyro* gyr;
-	SerialPort* rioDuino;
 
 	void TankControllerDrive(double leftSpeed, double rightSpeed);
 	void ArcadeControllerDrive(double moveSpeed, double turnSpeed);

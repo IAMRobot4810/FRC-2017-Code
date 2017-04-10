@@ -3,18 +3,21 @@
  *
  *  Created on: Feb 21, 2017
  *      Author: 4810
+ *
+ *  Source file for Auto.h
  */
 
 #include <auto/Auto.h>
 
 Auto::Auto(DriveSystem* driveSystem, GearSystem* gearSystem, DigitalInput* gearDetectSensor,
-		DigitalInput* pegDetectSensor1, ShootSystem* shootSystem){
+		DigitalInput* pegDetectSensor1, ShootSystem* shootSystem){ //Constructor
 	drv = driveSystem;
 	gr = gearSystem;
 	gDetect = gearDetectSensor;
 	pDetect1 = pegDetectSensor1;
 	sht = shootSystem;
 
+	//Vision stuff with PixyCam
 	duino = new SerialPort(9600, SerialPort::kUSB1);
 	buff = new char[3];
 	buffread1 = 0;
@@ -22,26 +25,20 @@ Auto::Auto(DriveSystem* driveSystem, GearSystem* gearSystem, DigitalInput* gearD
 	buffread3 = 0;
 }
 
-Auto::~Auto(){
+Auto::~Auto(){ //Destructor
 	delete duino;
 	delete buff;
 }
 
-void Auto::AutoInitialize(int position){
-
-	if(position == 1){
-
-	}
-	else if(position == 3){
-
-	}
-	else{
-		drv->TimeStraightDrive(-1.0, 0.55);
-	}
+void Auto::AutoInitialize(){ //Initializes autonomous variables
 	ingear = false;
 	backedup = false;
+	baselineReached = false;
+	shotBalls = false;
+	gearPlaced = false;
 }
-void Auto::AutonRun(bool gear, bool ball, bool sensor){
+
+void Auto::AutonRun(bool gear, bool ball, bool sensor){ //A messy function that will be removed
 	duino->Read(buff, 3);
 	buffread1 = (int) buff[0];
 	buffread2 = (int) buff[1];
@@ -148,4 +145,122 @@ void Auto::AutonRun(bool gear, bool ball, bool sensor){
 	else{
 		drv->TimeStraightDrive(-0.3, 0.2);
 	}
+}
+
+void Auto::BaselineAuto(){ //Autonomous to just reach the baseline and stop
+	if(!baselineReached){ //Preventing looping in periodic
+		drv->TimeStraightDrive(-0.3, 2.5);
+		baselineReached = true;
+	}
+}
+
+void Auto::BallAuto(Auto::shooterPowMode power){ //Shoots balls and reaches baseline
+	if(!shotBalls){ //Preventing looping in periodic
+		if(power == kMidPow){
+			sht->SpinSequence(0.8, 1.5, 0.5, 1.0, 7.0);
+			shotBalls = true;
+			Wait(0.5);
+		}
+		else if(power == kHighPow){
+			sht->SpinSequence(1.0, 1.5, 0.5, 1.0, 7.0);
+			shotBalls = true;
+			Wait(0.5);
+		}
+		else{
+			sht->SpinSequence(0.52, 1.5, 0.5, 1.0, 7.0);
+			shotBalls = true;
+			Wait(0.5);
+		}
+	}
+	else{
+		BaselineAuto();
+	}
+}
+
+void Auto::GearAuto(Auto::AutoPosition position){ //Places a gear on the peg
+	BaselineAuto();
+	Wait(0.5);
+	if(!gearPlaced){ //Preventing looping in periodic
+		if(position == kLeftAuto){
+
+		}
+		else if(position == kRightAuto){
+
+		}
+		else{
+			gr->openClaw();
+			Wait(0.5);
+			gr->lowerClaw();
+			drv->TimeStraightDrive(0.25, 0.5);
+		}
+	}
+}
+
+void Auto::GearVisionAuto(Auto::AutoPosition position){ //Vision-based GearAuto
+
+}
+
+void Auto::BallGearAuto(Auto::AutoPosition position){ //Shoots balls then places a gear
+	if(position == kLeftAuto){
+		if(!shotBalls){ //Preventing looping in periodic
+			sht->SpinSequence(0.5, 1.0, 0.5, 1.0, 5.5);
+			shotBalls = true;
+			Wait(0.5);
+		}
+	}
+	else if(position == kRightAuto){
+		if(!shotBalls){ //Preventing looping in periodic
+			sht->SpinSequence(1.0, 1.0, 0.5, 1.0, 5.5);
+			shotBalls = true;
+			Wait(0.5);
+		}
+	}
+	else{
+		if(!shotBalls){ //Preventing looping in periodic
+			sht->SpinSequence(0.8, 1.0, 0.5, 1.0, 5.5);
+			shotBalls = true;
+			Wait(0.5);
+		}
+		BaselineAuto();
+		Wait(0.5);
+		if(!gearPlaced){ //Preventing looping in periodic
+			gr->openClaw();
+			Wait(0.5);
+			gr->lowerClaw();
+			drv->TimeStraightDrive(0.3, 2.5);
+			gearPlaced = true;
+		}
+	}
+}
+
+void Auto::BallGearVisionAuto(Auto::AutoPosition position){ //Vision-based BallGearAuto
+
+}
+
+void Auto::GearBallAuto(Auto::AutoPosition position){ //Places a gear, drives back, then shoots balls
+	if(!gearPlaced){ //Preventing looping in periodic
+		if(position == kLeftAuto){
+
+		}
+		else if(position == kRightAuto){
+
+		}
+		else{
+			BaselineAuto();
+			Wait(0.5);
+			gr->openClaw();
+			Wait(0.5);
+			gr->lowerClaw();
+			drv->TimeStraightDrive(0.3, 2.5);
+			Wait(0.5);
+			if(!shotBalls){ //Preventing looping in periodic
+				sht->SpinSequence(0.8, 1.0, 0.5, 1.0, 3.5);
+				shotBalls = true;
+			}
+		}
+	}
+}
+
+void Auto::GearBallVsionAuto(Auto::AutoPosition position){ //Vision-based GearBallAuto
+
 }

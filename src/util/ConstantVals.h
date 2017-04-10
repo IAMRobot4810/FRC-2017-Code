@@ -3,10 +3,17 @@
  *
  *  Created on: Feb 10, 2017
  *      Author: 4810
+ *
+ * Constant values used in 2017 robot.
  */
 
+//Header guards
 #ifndef SRC_UTIL_CONSTANTVALS_H_
 #define SRC_UTIL_CONSTANTVALS_H_
+
+//General
+const double STOP = 0.0;
+const double ZERO = 0.0;
 
 //Controls
 const double stickDeadband = 0.25;
