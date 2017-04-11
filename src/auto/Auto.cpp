@@ -8,12 +8,12 @@
 #include <auto/Auto.h>
 
 Auto::Auto(DriveSystem* driveSystem, GearSystem* gearSystem, DigitalInput* gearDetectSensor,
-		DigitalInput* pegDetectSensor1, DigitalInput* pegDetectSensor2){
+		DigitalInput* pegDetectSensor1, ShootSystem* shootSystem){
 	drv = driveSystem;
 	gr = gearSystem;
 	gDetect = gearDetectSensor;
 	pDetect1 = pegDetectSensor1;
-	pDetect2 = pegDetectSensor2;
+	sht = shootSystem;
 
 	duino = new SerialPort(9600, SerialPort::kUSB1);
 	buff = new char[3];
@@ -27,11 +27,19 @@ Auto::~Auto(){
 	delete buff;
 }
 
-void Auto::AutoInitialize(){
-	drv->TimeStraightDrive(-0.5, 1.0);
-	ingear = false;
+void Auto::AutoInitialize(bool ball){
+	if(ball){
+		sht->SpinSequence(5000, 1.0, 0.5, 1.0);
+		Wait(0.5);
+		drv->TimeStraightDrive(-0.5, 1.25);
+		ingear = false;
+	}
+	else{
+		drv->TimeStraightDrive(-0.5, 1.25);
+		ingear = false;
+	}
 }
-void Auto::AutonRun(bool gear){
+void Auto::AutonRun(bool gear, bool sensor){
 	duino->Read(buff, 3);
 	buffread1 = (int) buff[0];
 	buffread2 = (int) buff[1];
@@ -39,67 +47,79 @@ void Auto::AutonRun(bool gear){
 	double visDist = buffread1;
 	double x1 = buffread2;
 	double x2 = buffread3;
-	double targetDistInch = 16;
+	double targetDistInch = 11;
 	if(gear == true){
-		//drv->DistanceStraightDrive(0.75, 9.5);
-		/*drv->TimeStraightDrive(-0.3, 2.25);
-		Wait(0.5);
-		if(pDetect1->Get() || pDetect2->Get()){
-			gr->openClaw();
-		}
-		//gr->openClaw();
-		Wait(0.5);
-		drv->TimeStraightDrive(0.3, 0.75);*/
-		if(ingear == false){
-
-		if(visDist <= 0){
-			drv->TankControllerDrive(0.0, 0.0);
-		}
-		else{
-			if(visDist > (targetDistInch+2)){
-				if(x1 > x2){
-					drv->TankControllerDrive(-0.25, -0.15);
-				}
-				else if(x2 > x1){
-					drv->TankControllerDrive(-0.15, -0.25);
+		if(sensor == true){
+			if(ingear == false){
+				if(visDist <= 0){
+					drv->TankControllerDrive(0.0, 0.0);
 				}
 				else{
-					drv->TankControllerDrive(-0.25, -0.25);
+					if(visDist > (targetDistInch+2) && visDist < 70){
+						if(x1-2 > x2+2){
+							drv->TankControllerDrive(-0.25, -0.15);
+						}
+						else if(x2-2 > x1+2){
+							drv->TankControllerDrive(-0.15, -0.25);
+						}
+						else{
+							drv->TankControllerDrive(-0.25, -0.25);
+						}
+					}
+					else if(visDist >= (targetDistInch - 2) && visDist <= (targetDistInch + 2)){
+						drv->TankControllerDrive(0.0, 0.0);
+						if(x2-2 > x1+2){
+							drv->TankControllerDrive(0.15, -0.15);
+						}
+						else if(x1-2 > x2+2){
+							drv->TankControllerDrive(-0.15, 0.15);
+						}
+						else{
+							drv->TankControllerDrive(0.0, 0.0);
+							ingear = true;
+						}
+					}
+					else if (visDist < (targetDistInch-2) && visDist > 5){
+						drv->TankControllerDrive(0.25, 0.25);
+					}
+					else{
+						drv->TankControllerDrive(0.0, 0.0);
+					}
 				}
-				//drive->TankDrive(-driveSpeed, -driveSpeed, false);
+				SmartDashboard::PutNumber("VisDist: ", visDist);
+				SmartDashboard::PutNumber("x1: ", buffread2);
+				SmartDashboard::PutNumber("x2: ", buffread3);
 			}
-			else if(visDist >= (targetDistInch - 2) && visDist <= (targetDistInch + 2)){
+			else{
 				drv->TankControllerDrive(0.0, 0.0);
-				if(x1 < x2){
-					drv->TankControllerDrive(0.15, -0.15);
-				}
-				else if(x2 < x1){
-					drv->TankControllerDrive(-0.15, 0.15);
+				if(pDetect1->Get()){
+					drv->TankControllerDrive(0.0, 0.0);
+					gr->openClaw();
+					Wait(0.75);
+					gr->lowerClaw();
 				}
 				else{
 					drv->TankControllerDrive(0.0, 0.0);
-					ingear = true;
 				}
 			}
-			else if (visDist < (targetDistInch-2)){
-				drv->TankControllerDrive(0.25, 0.25);
+		}
+		else{
+			if(ingear == false){
+				drv->TimeStraightDrive(-0.5, 0.75);
+				Wait(0.5);
+				gr->openClaw();
+				Wait(0.75);
+				gr->lowerClaw();
+				Wait(0.75);
+				drv->TimeStraightDrive(0.25, 0.5);
+				ingear = true;
 			}
 			else{
 				drv->TankControllerDrive(0.0, 0.0);
 			}
 		}
-		SmartDashboard::PutNumber("VisDist: ", visDist);
-		//SmartDashboard::PutNumber("VisDistFromHeight", buffread2);
-		SmartDashboard::PutNumber("x1: ", buffread2);
-		SmartDashboard::PutNumber("x2: ", buffread3);
-		}
-		else{
-			drv->TankControllerDrive(0.0, 0.0);
-			gr->openClaw();
-			Wait(1.0);
-			gr->lowerClaw();
-		}
 	}
+
 	else{
 		drv->TimeStraightDrive(-0.3, 0.2);
 	}

@@ -40,7 +40,7 @@ void loop() {
       else if(blck > 2){
         xElem = 0;
         for(j = 0; j < blck; j++){
-          if((pix.blocks[j].width > 5 && pix.blocks[j].height > 10) && (pix.blocks[j].width < pix.blocks[j].height)){
+          if((pix.blocks[j].width > 5 && pix.blocks[j].height > 10)){
             xPos[xElem] = pix.blocks[j].x;
             heights[xElem] = pix.blocks[j].height;
             xElem += 1;
@@ -49,7 +49,7 @@ void loop() {
       }
       else{
         for(j = 0; j < blck; j++){
-         if((pix.blocks[j].width > 5 && pix.blocks[j].height > 10) && (pix.blocks[j].width < pix.blocks[j].height)){
+         if((pix.blocks[j].width > 5 && pix.blocks[j].height > 10)){
             xPos[xElem] = pix.blocks[j].x;
             heights[xElem] = pix.blocks[j].height;
             xElem = xElem + 1;

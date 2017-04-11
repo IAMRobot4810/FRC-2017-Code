@@ -38,8 +38,8 @@ IAMRobot::IAMRobot(){
 
 	control1 = new XboxController(controller1ID);
 	control2 = new XboxController(controller2ID);
-	tlp = new Teleop(control1, control2, drive, gear, gearSensor, pegSensor1, pegSensor2, climb, ball);
-	ato = new Auto(drive, gear, gearSensor, pegSensor1, pegSensor2);
+	tlp = new Teleop(control1, control2, drive, gear, gearSensor, pegSensor1, climb, ball);
+	ato = new Auto(drive, gear, gearSensor, pegSensor1, ball);
 	cammy = CameraServer::GetInstance();
 
 	rLED = new Relay(rLEDID, Relay::kBothDirections);
@@ -99,7 +99,7 @@ void IAMRobot::AutonomousInit(){
 		// Default Auto goes here
 		ato->AutonRun(false);
 	}*/
-	ato->AutoInitialize();
+	ato->AutoInitialize(true);
 }
 
 void IAMRobot::AutonomousPeriodic() {
@@ -108,7 +108,7 @@ void IAMRobot::AutonomousPeriodic() {
 	} else {
 		// Default Auto goes here
 	}
-	ato->AutonRun(true);
+	ato->AutonRun(true, true);
 }
 
 void IAMRobot::TeleopInit() {
@@ -155,14 +155,6 @@ void IAMRobot::TeleopPeriodic() {
 	SmartDashboard::PutNumber("shootVel", shooterTal->GetEncVel());
 	SmartDashboard::PutNumber("shootVolt", shooterTal->GetBusVoltage());
 	SmartDashboard::PutNumber("blendCurrent", pdp->GetCurrent(3));
-	/*if(gearSensor->Get()){
-		bLED->Set(Relay::kOff);
-		rLED->Set(Relay::kReverse);
-	}
-	else{
-		bLED->Set(Relay::kReverse);
-		rLED->Set(Relay::kOff);
-	}*/
 }
 
 void IAMRobot::TestPeriodic() {
