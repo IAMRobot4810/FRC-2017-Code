@@ -16,6 +16,7 @@ Auto::Auto(DriveSystem* driveSystem, GearSystem* gearSystem, DigitalInput* gearD
 	gDetect = gearDetectSensor;
 	pDetect1 = pegDetectSensor1;
 	sht = shootSystem;
+	powerPanel = new PowerDistributionPanel(pdpID);
 
 	//Vision stuff with PixyCam
 	duino = new SerialPort(9600, SerialPort::kUSB1);
@@ -28,6 +29,7 @@ Auto::Auto(DriveSystem* driveSystem, GearSystem* gearSystem, DigitalInput* gearD
 Auto::~Auto(){ //Destructor
 	delete duino;
 	delete buff;
+	delete powerPanel;
 }
 
 void Auto::AutoInitialize(){ //Initializes autonomous variables
@@ -36,6 +38,8 @@ void Auto::AutoInitialize(){ //Initializes autonomous variables
 	baselineReached = false;
 	shotBalls = false;
 	gearPlaced = false;
+	jamCycles = 0;
+	unjamCycles = 0;
 }
 
 void Auto::AutonRun(bool gear, bool ball, bool sensor){ //A messy function that will be removed
@@ -116,7 +120,7 @@ void Auto::AutonRun(bool gear, bool ball, bool sensor){ //A messy function that 
 				if(ball && !ballDone){
 					drv->TimeStraightDrive(0.5, 1.0);
 					Wait(0.5);
-					sht->SpinSequence(5000, 1.0, 0.5, 1.0, 7.0);
+					//sht->SpinSequence(5000, 1.0, 0.5, 1.0, 7.0);
 					Wait(0.5);
 					ballDone = true;
 				}
@@ -149,30 +153,61 @@ void Auto::AutonRun(bool gear, bool ball, bool sensor){ //A messy function that 
 
 void Auto::BaselineAuto(){ //Autonomous to just reach the baseline and stop
 	if(!baselineReached){ //Preventing looping in periodic
-		drv->TimeStraightDrive(-0.3, 2.5);
+		drv->TimeStraightGyroDrive(-1.0, 0.65);
 		baselineReached = true;
+		SmartDashboard::PutNumber("GyroRead", drv->gyr->GetAngle());
 	}
 }
 
 void Auto::BallAuto(Auto::shooterPowMode power){ //Shoots balls and reaches baseline
 	if(!shotBalls){ //Preventing looping in periodic
 		if(power == kMidPow){
-			sht->SpinSequence(0.8, 1.5, 0.5, 1.0, 7.0);
+			for(int i = 0; i < 100; i++){
+				sht->SpinShoot(midAutoShootRPM);
+				Wait(0.01);
+			}
+			for(int i = 0; i < 500; i++){
+				sht->SpinShoot(midAutoShootRPM);
+				sht->SpinFeed(0.5);
+				sht->SpinMeter(1.0);
+				Wait(0.01);
+			}
 			shotBalls = true;
 			Wait(0.5);
 		}
 		else if(power == kHighPow){
-			sht->SpinSequence(1.0, 1.5, 0.5, 1.0, 7.0);
+			for(int i = 0; i < 100; i++){
+				sht->SpinShoot(highAutoShootRPM);
+				Wait(0.01);
+			}
+			for(int i = 0; i < 500; i++){
+				sht->SpinShoot(highAutoShootRPM);
+				sht->SpinFeed(0.5);
+				sht->SpinMeter(1.0);
+				Wait(0.01);
+			}
 			shotBalls = true;
 			Wait(0.5);
 		}
 		else{
-			sht->SpinSequence(0.52, 1.5, 0.5, 1.0, 7.0);
+			for(int i = 0; i < 100; i++){
+				sht->SpinShoot(lowAutoShootRPM);
+				Wait(0.01);
+			}
+			for(int i = 0; i < 500; i++){
+				sht->SpinShoot(lowAutoShootRPM);
+				sht->SpinFeed(0.5);
+				sht->SpinMeter(1.0);
+				Wait(0.01);
+			}
 			shotBalls = true;
 			Wait(0.5);
 		}
 	}
 	else{
+		sht->SpinShoot(0.0);
+		sht->SpinFeed(0.0);
+		sht->SpinMeter(0.0);
 		BaselineAuto();
 	}
 }
@@ -200,34 +235,89 @@ void Auto::GearVisionAuto(Auto::AutoPosition position){ //Vision-based GearAuto
 
 }
 
-void Auto::BallGearAuto(Auto::AutoPosition position){ //Shoots balls then places a gear
+void Auto::BallGearAuto(Auto::AutoPosition position, Auto::shooterPowMode shootPower){ //Shoots balls then places a gear
 	if(position == kLeftAuto){
 		if(!shotBalls){ //Preventing looping in periodic
-			sht->SpinSequence(0.5, 1.0, 0.5, 1.0, 5.5);
+
 			shotBalls = true;
 			Wait(0.5);
 		}
 	}
 	else if(position == kRightAuto){
 		if(!shotBalls){ //Preventing looping in periodic
-			sht->SpinSequence(1.0, 1.0, 0.5, 1.0, 5.5);
+
 			shotBalls = true;
 			Wait(0.5);
 		}
 	}
 	else{
 		if(!shotBalls){ //Preventing looping in periodic
-			sht->SpinSequence(0.8, 1.0, 0.5, 1.0, 5.5);
+			if(shootPower == kMidPow){
+				for(int i = 0; i < 25; i++){
+					sht->SpinShoot(midAutoShootRPM);
+					Wait(0.01);
+				}
+				for(int i = 0; i < 300; i++){
+					sht->SpinShoot(midAutoShootRPM);
+					sht->SpinFeed(0.5);
+					sht->SpinMeter(1.0);
+					if(powerPanel->GetCurrent(2) > 9.0){
+						jamCycles++;
+						if(jamCycles >= 50){
+							sht->SpinFeed(-0.5);
+							unjamCycles++;
+							if(unjamCycles >= 30){
+								jamCycles = 0;
+								unjamCycles = 0;
+							}
+						}
+					}
+					Wait(0.01);
+				}
+				shotBalls = true;
+				Wait(0.5);
+			}
+			else if(shootPower == kHighPow){
+				for(int i = 0; i < 50; i++){
+					sht->SpinShoot(highAutoShootRPM);
+					Wait(0.01);
+				}
+				for(int i = 0; i < 400; i++){
+					sht->SpinShoot(highAutoShootRPM);
+					sht->SpinFeed(0.5);
+					sht->SpinMeter(1.0);
+					Wait(0.01);
+				}
+				shotBalls = true;
+				Wait(0.5);
+			}
+			else{
+				for(int i = 0; i < 25; i++){
+					sht->SpinShoot(lowAutoShootRPM);
+					Wait(0.01);
+				}
+				for(int i = 0; i < 200; i++){
+					sht->SpinShoot(lowAutoShootRPM);
+					sht->SpinFeed(0.5);
+					sht->SpinMeter(1.0);
+					Wait(0.01);
+				}
+				shotBalls = true;
+				Wait(0.5);
+			}
 			shotBalls = true;
 			Wait(0.5);
 		}
+		sht->SpinShoot(0.0);
+		sht->SpinMeter(0.0);
+		sht->SpinFeed(0.0);
 		BaselineAuto();
 		Wait(0.5);
 		if(!gearPlaced){ //Preventing looping in periodic
 			gr->openClaw();
 			Wait(0.5);
 			gr->lowerClaw();
-			drv->TimeStraightDrive(0.3, 2.5);
+			drv->TimeStraightDrive(0.5, 0.5);
 			gearPlaced = true;
 		}
 	}
@@ -254,7 +344,7 @@ void Auto::GearBallAuto(Auto::AutoPosition position){ //Places a gear, drives ba
 			drv->TimeStraightDrive(0.3, 2.5);
 			Wait(0.5);
 			if(!shotBalls){ //Preventing looping in periodic
-				sht->SpinSequence(0.8, 1.0, 0.5, 1.0, 3.5);
+				//sht->SpinSequence(0.8, 1.0, 0.5, 1.0, 3.5);
 				shotBalls = true;
 			}
 		}

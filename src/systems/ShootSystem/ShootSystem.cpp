@@ -19,14 +19,12 @@ ShootSystem::ShootSystem(CANTalon* feederTalon, CANTalon* meterTalon, CANTalon* 
 	bshoot->SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative); //Using a CTRE Mag Encoder
 	bshoot->SetSensorDirection(false); //Reversing the sensor count direction
 	bshoot->SetInverted(true); //Reversing the Talon
-	bshoot->SetTalonControlMode(CANTalon::kSpeedMode); //Using speed control mode
 	bshoot->ConfigNominalOutputVoltage(0.0, 0.0); //Configuring lowest voltage to motor *NEEDS TESTING*
 	bshoot->ConfigPeakOutputVoltage(12.0, -12.0); //Configuring peak voltage to motor *NEEDS TESTING*
 	bshoot->SetEncPosition(0); //Zeroing PID accumulation and sensor
 	bshoot->SetPosition(0.0); //'
 	bshoot->ClearIaccum(); //'
-	bshoot->SetPID(0.0, 0.0, 0.0, 0.0); //Setting PID constants *NEEDS TESTING*
-	bshoot->EnableControl(); //Enabling speed mode
+
 }
 
 ShootSystem::~ShootSystem(){
@@ -34,18 +32,34 @@ ShootSystem::~ShootSystem(){
 }
 
 void ShootSystem::SpinShoot(double speed){
-	bshoot->Set(speed);
+	if(speed == 0){
+		bshoot->Set(0.0);
+	}
+	else{
+		bshoot->Set(pow(((speed-(bshoot->GetSpeed()))/(shootDivisor*speed)), shootPowFactor));
+	}
 }
 
 void ShootSystem::SpinMeter(double speed){
 	bmeter->Set(speed);
 }
 
+/*void ShootSystem::UnjamFeed(double speed){
+	if(powerPanel->GetCurrent(2) > 9.0){
+		Wait(0.75);
+		if(powerPanel->GetCurrent(2) > 9.0){
+			bfeed->Set(-speed);
+			Wait(0.25);
+		}
+	}
+}*/
+
 void ShootSystem::SpinFeed(double speed){
 	bfeed->Set(speed);
+	//UnjamFeed(speed);
 }
 
-void ShootSystem::SpinSequence(double shootSpeed, double meterSpeed, double feedSpeed, double spinTime, double shootTime){
+/*void ShootSystem::SpinSequence(double shootSpeed, double meterSpeed, double feedSpeed, double spinTime, double shootTime){
 	SpinShoot(shootSpeed);
 	Wait(spinTime);
 	SpinMeter(meterSpeed);
@@ -84,5 +98,5 @@ void ShootSystem::SpinSequenceVoltage(double shootSpeed, double meterSpeed, doub
 	}else{
 		bshoot->Set(0);
 	}
-}
+}*/
 

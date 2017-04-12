@@ -17,7 +17,8 @@ enum GeneralIDs {
 	camera2ID = 1,
 	rLEDID = 0,
 	gLEDID = 1,
-	bLEDID = 2
+	bLEDID = 2,
+	gyroID = 0
 };
 
 enum ControllerIDs {

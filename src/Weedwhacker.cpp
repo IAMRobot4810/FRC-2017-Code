@@ -10,7 +10,8 @@ Weedwhacker::Weedwhacker(){ //Constructor
 	frTalon = new CANTalon(frTalID);
 	rrTalon = new CANTalon(rrTalID);
 	robotDrive = new RobotDrive(flTalon, rlTalon, frTalon, rrTalon);
-	drive = new DriveSystem(robotDrive);
+	gyration = new AnalogGyro(gyroID);
+	drive = new DriveSystem(robotDrive, gyration);
 
 	//GearSystem objects
 	gearClawNoid = new DoubleSolenoid(pcmID, clawNoidForwardID, clawNoidReverseID);
@@ -37,9 +38,6 @@ Weedwhacker::Weedwhacker(){ //Constructor
 
 	//Autonomous objects
 	ato = new Auto(drive, gear, gearSensor, pegSensor, ball);
-
-	//General robot objects
-	pdp = new PowerDistributionPanel(pdpID);
 
 	//Sight cameras
 	cammy = CameraServer::GetInstance();
@@ -78,9 +76,10 @@ Weedwhacker::~Weedwhacker(){ //Destructor
 	delete control2;
 	delete tlp;
 
+	delete gyration;
 	delete ato;
 
-	delete pdp;
+	//delete pdp;
 
 	delete rLED;
 	delete gLED;
@@ -141,7 +140,8 @@ void Weedwhacker::AutonomousPeriodic(){ //Autonomous loop
 	else{ // Default autonomous mode
 		ato->BaselineAuto();
 	}*/
-	ato->BallAuto(Auto::kHighPow);
+	//ato->BallAuto(Auto::kMidPow);
+	ato->BallGearAuto(Auto::kMiddleAuto, Auto::kMidPow);
 }
 
 void Weedwhacker::TeleopInit(){ //Runs once when teleop is enabled
@@ -172,7 +172,6 @@ void Weedwhacker::TeleopPeriodic(){ //Teleop loop
 	SmartDashboard::PutNumber("shootSpeed", shooterTal->GetSpeed());
 	SmartDashboard::PutNumber("shootVel", shooterTal->GetEncVel());
 	SmartDashboard::PutNumber("shootVolt", shooterTal->GetBusVoltage());
-	SmartDashboard::PutNumber("blendCurrent", pdp->GetCurrent(3));
 }
 
 void Weedwhacker::TestInit(){ //Runs once when test mode is enabled, for testing

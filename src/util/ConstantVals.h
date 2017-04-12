@@ -29,4 +29,13 @@ const double trigOutIntercept = 0.0;
 const double wheelDiameter = 4.0;
 const int encoderRotationCounts = 1024;
 
+//Shooter
+const double shootDivisor = 0.7;
+const double shootPowFactor = 0.25;
+
+//Auto
+const double lowAutoShootRPM = 5550;
+const double midAutoShootRPM = 6450;
+const double highAutoShootRPM = 9200;
+
 #endif /* SRC_UTIL_CONSTANTVALS_H_ */

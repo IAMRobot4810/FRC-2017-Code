@@ -46,6 +46,7 @@ public:
 	CANTalon* frTalon;
 	CANTalon* rrTalon;
 	RobotDrive* robotDrive;
+	AnalogGyro* gyration;
 	DriveSystem* drive;
 
 	//GearSystem objects
@@ -73,9 +74,6 @@ public:
 
 	//Autonomous objects
 	Auto* ato;
-
-	//General robot objects
-	PowerDistributionPanel* pdp;
 
 	//Sight Cameras
 	CameraServer* cammy;

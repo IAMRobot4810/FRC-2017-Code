@@ -1,9 +1,10 @@
 #include <systems/DriveSystem/DriveSystem.h>
 
-DriveSystem::DriveSystem(RobotDrive* roboDrive){
+DriveSystem::DriveSystem(RobotDrive* roboDrive, AnalogGyro* gyro){
 	drov = roboDrive;
 	drov->SetSafetyEnabled(true);
 	drov->SetExpiration(0.1);
+	gyr = gyro;
 }
 
 DriveSystem::~DriveSystem(){
@@ -24,12 +25,29 @@ void DriveSystem::ArcadeControllerDrive(double moveSpeed, double turnSpeed){
 
 void DriveSystem::TimeStraightDrive(double driveSpeed, double driveSeconds){
 	drov->SetSafetyEnabled(false);
-	/*for(int i = 0; i <= driveSeconds*100; i++){
+	for(int i = 0; i <= driveSeconds*100; i++){
 		drov->ArcadeDrive(driveSpeed, 0.0, false);
 		Wait(0.01);
-	}*/
-	drov->ArcadeDrive(driveSpeed, 0.0, false);
-	Wait(driveSeconds);
+	}
+	/*drov->ArcadeDrive(driveSpeed, 0.0, false);
+	Wait(driveSeconds);*/
+	drov->ArcadeDrive(0.0, 0.0, false);
+	drov->SetSafetyEnabled(true);
+}
+
+void DriveSystem::TimeStraightGyroDrive(double driveSpeed, double driveSeconds){
+	drov->SetSafetyEnabled(false);
+	for(int i = 0; i <= driveSeconds*100; i++){
+		gyroIAccum += gyr->GetAngle();
+		double anglePCorrect = (gyr->GetAngle()*0.03);
+		double angleICorrect = (gyroIAccum*0.0013);
+		double angleCorrection = -(anglePCorrect+angleICorrect);
+		SmartDashboard::PutNumber("P", anglePCorrect);
+		SmartDashboard::PutNumber("I", angleICorrect);
+		SmartDashboard::PutNumber("Correction", angleCorrection);
+		drov->ArcadeDrive(driveSpeed, angleCorrection, true);
+		Wait(0.01);
+	}
 	drov->ArcadeDrive(0.0, 0.0, false);
 	drov->SetSafetyEnabled(true);
 }

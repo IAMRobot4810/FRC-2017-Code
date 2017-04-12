@@ -15,8 +15,10 @@
 #include <systems/DriveSystem/DriveSystem.h>
 #include <systems/GearSystem/GearSystem.h>
 #include <systems/ShootSystem/ShootSystem.h>
+#include <util/ConstantVals.h>
 #include <DigitalInput.h>
 #include <SerialPort.h>
+#include <AnalogGyro.h>
 
 class Auto { //Autonomous class
 
@@ -49,7 +51,7 @@ public:
 	void BallAuto(shooterPowMode power); //Shoots balls and reaches baseline
 	void GearAuto(AutoPosition position); //Places a gear on the peg
 	void GearVisionAuto(AutoPosition position); //Vision-based GearAuto
-	void BallGearAuto(AutoPosition position); //Shoots balls then places a gear
+	void BallGearAuto(AutoPosition position, Auto::shooterPowMode shootPower); //Shoots balls then places a gear
 	void BallGearVisionAuto(AutoPosition position); //Vision-based BallGearAuto
 	void GearBallAuto(AutoPosition position); //Places a gear, drives back, then shoots balls
 	void GearBallVsionAuto(AutoPosition position); //Vision-based GearBallAuto
@@ -62,11 +64,15 @@ private:
 	DigitalInput* pDetect1;
 	ShootSystem* sht;
 	SerialPort* duino;
+	PowerDistributionPanel* powerPanel;
 
 	//Autonomous variables to stop from looping in periodic
 	bool baselineReached = false;
 	bool shotBalls = false;
 	bool gearPlaced = false;
+
+	int jamCycles;
+	int unjamCycles;
 
 	//Part of messy AutonRun
 	bool ingear = false;

@@ -25,14 +25,16 @@ using namespace frc;
 class DriveSystem {
 
 public:
-	DriveSystem(RobotDrive* roboDrive);
+	DriveSystem(RobotDrive* roboDrive, AnalogGyro* gyro);
 	~DriveSystem();
 
 	RobotDrive* drov;
+	AnalogGyro* gyr;
 
 	void TankControllerDrive(double leftSpeed, double rightSpeed);
 	void ArcadeControllerDrive(double moveSpeed, double turnSpeed);
 	void TimeStraightDrive(double driveSpeed, double driveSeconds);
+	void TimeStraightGyroDrive(double driveSpeed, double driveSeconds);
 	void TimeRotateDrive(double driveSpeed, double driveSeconds);
 	double EncoderScale(int encoderReading, double wheelDiameterInches);
 	void DistanceStraightDrive(double positiveDriveSpeed, double driveFeet);
@@ -40,6 +42,8 @@ public:
 	void GearVisionDrive(double stopDist);
 
 private:
+	//Gyro PID Variables
+	double gyroIAccum = 0;
 
 protected:
 
