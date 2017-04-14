@@ -1,19 +1,15 @@
-/*
- * Scale.h
- *
- *  Created on: Feb 11, 2017
- *      Author: 4810
- */
-
+//Source file for Scaler.h
 #include <util/Scaler.h>
 
-Scaler::Scaler(){
+Scaler::Scaler(){ //Constructor
 
 }
 
-Scaler::~Scaler(){
+Scaler::~Scaler(){ //Destructor
 
 }
+
+//If you don't know the rest, git gud at math bruh
 
 double Scaler::ExponentialScale(double input, double minIn, double maxIn, double minOut, double maxOut, double exponent){
 	double expOut = 0;

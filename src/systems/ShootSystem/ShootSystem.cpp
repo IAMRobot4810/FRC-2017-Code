@@ -14,7 +14,19 @@ ShootSystem::ShootSystem(CANTalon* feederTalon, CANTalon* meterTalon, CANTalon* 
 	bmeter = meterTalon;
 	bmeter->SetInverted(true);
 	bshoot = shootTalon;
-	//bshoot->SelectProfileSlot(0);
+
+	//bshoot properties
+	bshoot->SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative); //Using a CTRE Mag Encoder
+	bshoot->SetSensorDirection(false); //Reversing the sensor count direction
+	bshoot->SetInverted(true); //Reversing the Talon
+	bshoot->SetTalonControlMode(CANTalon::kSpeedMode); //Using speed control mode
+	bshoot->ConfigNominalOutputVoltage(0.0, 0.0); //Configuring lowest voltage to motor *NEEDS TESTING*
+	bshoot->ConfigPeakOutputVoltage(12.0, -12.0); //Configuring peak voltage to motor *NEEDS TESTING*
+	bshoot->SetEncPosition(0); //Zeroing PID accumulation and sensor
+	bshoot->SetPosition(0.0); //'
+	bshoot->ClearIaccum(); //'
+	bshoot->SetPID(0.0, 0.0, 0.0, 0.0); //Setting PID constants *NEEDS TESTING*
+	bshoot->EnableControl(); //Enabling speed mode
 }
 
 ShootSystem::~ShootSystem(){
@@ -33,9 +45,44 @@ void ShootSystem::SpinFeed(double speed){
 	bfeed->Set(speed);
 }
 
-void ShootSystem::SpinSequence(double shootSpeed, double meterSpeed, double feedSpeed, double spinTime){
+void ShootSystem::SpinSequence(double shootSpeed, double meterSpeed, double feedSpeed, double spinTime, double shootTime){
 	SpinShoot(shootSpeed);
 	Wait(spinTime);
 	SpinMeter(meterSpeed);
 	SpinFeed(feedSpeed);
+	Wait(shootTime);
+	SpinMeter(0.0);
+	SpinFeed(0.0);
+	SpinShoot(0.0);
 }
+
+void ShootSystem::SpinSequenceMod(double shootSpeed, double meterSpeed, double feedSpeed, double spinTime, double shootTime){
+	//if(bshoot->GetSpeed()<)
+}
+
+void ShootSystem::SpinSequenceCalibrated(double shootSpeed, double meterSpeed, double feedSpeed, double spinTime, double shootTime, double threshold, double power){
+	bshoot->SetTalonControlMode(CANTalon::kThrottleMode);
+	if(bshoot->GetSpeed() <= threshold){
+		bshoot->Set(pow((shootSpeed-(bshoot->GetSpeed()))/shootSpeed,power));
+	} else if(bshoot->GetSpeed() > threshold && bshoot->GetSpeed() <= shootSpeed ){
+		bshoot->Set(pow((shootSpeed-(bshoot->GetSpeed()))/shootSpeed,power));
+		bfeed->Set(feedSpeed);
+		bmeter->Set(meterSpeed);
+	}else{
+		bshoot->Set(0);
+	}
+}
+
+void ShootSystem::SpinSequenceVoltage(double shootSpeed, double meterSpeed, double feedSpeed, double spinTime, double shootTime, double threshold, double power){
+	bshoot->SetTalonControlMode(CANTalon::kVoltageMode);
+	if(bshoot->GetSpeed() <= threshold){
+		bshoot->Set(10*(pow((shootSpeed-(bshoot->GetSpeed()))/shootSpeed,power)));
+	} else if(bshoot->GetSpeed() > threshold && bshoot->GetSpeed() <= shootSpeed ){
+		bshoot->Set(10*(pow((shootSpeed-(bshoot->GetSpeed()))/shootSpeed,power)));
+		bfeed->Set(feedSpeed);
+		bmeter->Set(meterSpeed);
+	}else{
+		bshoot->Set(0);
+	}
+}
+

@@ -3,16 +3,18 @@
  *
  *  Created on: Feb 10, 2017
  *      Author: 4810
+ *
+ * Device IDs for 2017 robot.
  */
 
+//Header guards
 #ifndef SRC_UTIL_DEVICEID_H_
 #define SRC_UTIL_DEVICEID_H_
 
 enum GeneralIDs {
-	gearSensorID = 0, //0
-	pegSensor1ID = 1, //1
-	pegSensor2ID = 2,
+	pdpID = 1,
 	camera1ID = 0,
+	camera2ID = 1,
 	rLEDID = 0,
 	gLEDID = 1,
 	bLEDID = 2
@@ -24,32 +26,33 @@ enum ControllerIDs {
 };
 
 enum DriveIDs {
-	flTalID = 2, //5
-	rlTalID = 1, //3
-	frTalID = 4, //2
-	rrTalID = 5, //1
+	flTalID = 2, //3, //2
+	rlTalID = 1, //5, //1
+	frTalID = 4, //2, //4
+	rrTalID = 5, //1,
 	flEncID = 0,
 	frEncID = 3,
-	gyroID
 };
 
 enum ClimberIDs {
 	roller1TalID = 9,
-	roller2TalID = 8, //7
+	roller2TalID = 8//4//8, //7
 };
 
 enum GearIDs {
 	pcmID = 1,
-	raiseNoidForwardID = 3, //0
-	raiseNoidReverseID = 2, //1
-	clawNoidForwardID = 1, //2
-	clawNoidReverseID = 0 //3
+	raiseNoidForwardID = 0,//3,
+	raiseNoidReverseID = 1,//2,
+	clawNoidForwardID = 2,//1,
+	clawNoidReverseID = 3,//0
+	gearSensorID = 0,
+	pegSensorID = 1
 };
 
 enum ShootIDs {
-	feederTalID = 6,
-	meterTalID = 7, //4
-	shooterTalID = 3 //4
+	feederTalID = 3,//6,
+	meterTalID = 6, //7,//7, //4
+	shooterTalID = 7 //4
 };
 
 #endif /* SRC_UTIL_DEVICEID_H_ */

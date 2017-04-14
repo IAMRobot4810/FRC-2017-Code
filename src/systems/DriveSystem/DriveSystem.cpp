@@ -1,12 +1,9 @@
 #include <systems/DriveSystem/DriveSystem.h>
 
-DriveSystem::DriveSystem(RobotDrive* roboDrive, AnalogGyro* gyro){
+DriveSystem::DriveSystem(RobotDrive* roboDrive){
 	drov = roboDrive;
-	gyr = gyro;
 	drov->SetSafetyEnabled(true);
 	drov->SetExpiration(0.1);
-	/*gyr->InitGyro();
-	gyr->Calibrate();*/
 }
 
 DriveSystem::~DriveSystem(){
@@ -81,7 +78,7 @@ double DriveSystem::EncoderScale(int encoderReading, double wheelDiameterInches)
 		}
 	}
 	drov->ArcadeDrive(0.0, 0.0, false);
-}*/
+}
 
 void DriveSystem::RotateDrive(double positiveDriveSpeed, double driveDegrees, bool reInitializeGyro){
 	drov->SetSafetyEnabled(false);
@@ -120,7 +117,7 @@ void DriveSystem::RotateDrive(double positiveDriveSpeed, double driveDegrees, bo
 			}
 		}
 	}
-}
+}*/
 
 void DriveSystem::GearVisionDrive(double stopDist){
 

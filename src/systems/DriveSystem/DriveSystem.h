@@ -16,6 +16,7 @@
 #include <Timer.h>
 #include <cmath>
 #include <util/ConstantVals.h>
+#include <SerialPort.h>
 #include <PIDSource.h>
 #include <PIDOutput.h>
 
@@ -24,11 +25,10 @@ using namespace frc;
 class DriveSystem {
 
 public:
-	DriveSystem(RobotDrive* roboDrive, AnalogGyro* gyro);
+	DriveSystem(RobotDrive* roboDrive);
 	~DriveSystem();
 
 	RobotDrive* drov;
-	AnalogGyro* gyr;
 
 	void TankControllerDrive(double leftSpeed, double rightSpeed);
 	void ArcadeControllerDrive(double moveSpeed, double turnSpeed);
