@@ -46,7 +46,7 @@ public:
 	CANTalon* frTalon;
 	CANTalon* rrTalon;
 	RobotDrive* robotDrive;
-	AnalogGyro* gyration;
+	ADXRS450_Gyro* gyration;
 	DriveSystem* drive;
 
 	//GearSystem objects
@@ -79,11 +79,6 @@ public:
 	CameraServer* cammy;
 	CameraServer* cammy2;
 
-	//Status indicator/decoration LEDs
-	Relay* rLED;
-	Relay* gLED;
-	Relay* bLED;
-
 	void RobotInit(); //Initializes robot, runs at startup
 	void AutonomousInit() override; //Runs once when autonomous is enabled
 	void AutonomousPeriodic(); //Autonomous loop
@@ -95,25 +90,13 @@ public:
 	void DisabledPeriodic(); //Disabled mode loop
 
 private:
-	//Autonomous modes chooser *NEEDS TESTING*
 	LiveWindow *lw = LiveWindow::GetInstance();
-	SendableChooser<std::string> autoChooser;
-	const std::string autoNameDefault = "Default";
-	const std::string autoNameMGear = "Middle Gear Auto";
-	const std::string autoNameLBall = "Low Speed Ball Auto";
-	const std::string autoNameMBall = "Medium Speed Ball Auto";
-	const std::string autoNameHBall = "High Speed Ball Auto";
-	const std::string autoNameMBallGear = "Middle BallGear Auto";
-	const std::string autoNameMGearBall = "Middle GearBall Auto";
-	std::string autoSelected;
 
-	//Teleop modes chooser *NEEDS TESTING*
-	SendableChooser<std::string> teleChooser;
-	const std::string teleNameDefault = "2 Controller with Sensors";
-	const std::string teleName1s = "1 Controller with Sensors";
-	const std::string teleName1ns = "1 Controller with no Sensors";
-	const std::string teleName2ns = "2 Controller with no Sensors";
-	std::string teleSelected;
+	bool gearAuto;
+	int shootAutoPower;
+	Auto::AutoPosition gearPosEnum;
+	Auto::shooterPowMode shootPowerEnum;
+	bool gearFirst;
 
 protected:
 

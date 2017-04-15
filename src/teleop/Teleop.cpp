@@ -47,9 +47,7 @@ void Teleop::TeleopTwoController(bool sensors){
 	else{
 		drv->ArcadeControllerDrive(scale->LinearScale(dBand->DeadbandOut(cont1->GetY(XboxController::kLeftHand), stickDeadband), stickOutSlope, stickOutIntercept, true),
 				scale->LinearScale(dBand->DeadbandOut(cont1->GetX(XboxController::kRightHand), stickDeadband), turnStickOutSlope, turnStickOutIntercept, true));
-		SmartDashboard::PutNumber("Scaled Stick Output", scale->LinearScale(dBand->DeadbandOut(cont1->GetY(XboxController::kLeftHand), stickDeadband), stickOutSlope, stickOutIntercept, true));
 
-		SmartDashboard::PutNumber("POV", cont1->GetPOV());
 		if(cont1->GetPOV() == 0){
 			drv->ArcadeControllerDrive(-1.0, 0.0);
 		}
@@ -116,26 +114,40 @@ void Teleop::TeleopTwoController(bool sensors){
 			b1Toggle = true;
 		}
 
-		clb->Climb(cont2->GetTriggerAxis(GenericHID::kRightHand));
-		/*SmartDashboard::PutNumber("Shooter Power Factor", sht->powFactor);
-		sht->powFactor = SmartDashboard::GetNumber("Shooter Power Factor", 0.25);
-		SmartDashboard::PutNumber("Shooter Speed Factor", shooterSpeed);
-		shooterSpeed = SmartDashboard::GetNumber("Shooter Speed Factor", 5000);
-
-		if(cont2->GetAButton() && a2Toggle == true){
-			a2Toggle = false;
-			sht->SpinSequence(0.3, 1.0, 0.5, 2.0, 7.0);
+		if(cont2->GetTriggerAxis(GenericHID::kRightHand) > 0.1 && cont2->GetTriggerAxis(GenericHID::kLeftHand) <= 0.1){
+			clb->Climb(cont2->GetTriggerAxis(GenericHID::kRightHand));
 		}
-		else if(!cont2->GetAButton()){
-			a2Toggle = true;
-		}*/
-
-		/*if(cont2->GetAButton()){
-			sht->SpinShoot(6000);
+		else if(cont2->GetTriggerAxis(GenericHID::kLeftHand) > 0.1 && cont2->GetTriggerAxis(GenericHID::kRightHand) <= 0.1){
+			clb->Climb(-cont2->GetTriggerAxis(GenericHID::kLeftHand));
 		}
-		else if(!cont2->GetAButton()){
-			sht->SpinShoot(0.0);
-		}*/
+		else{
+			clb->Climb(STOP);
+		}
+
+		if(cont2->GetBumper(GenericHID::kLeftHand)){
+			sht->SpinShootEncoder(midAutoShootRPM);
+		}
+		else if(!cont2->GetBumper(GenericHID::kLeftHand)){
+			sht->SpinShootEncoder(STOP);
+		}
+		//sht->SpinShoot(cont2->GetTriggerAxis(GenericHID::kLeftHand));
+		if(cont2->GetBumper(GenericHID::kRightHand) && !cont2->GetBButton()){
+			sht->SpinMeter(meterPow);
+			sht->SpinFeed(feedPow);
+		}
+		else if(!cont2->GetBumper(GenericHID::kRightHand) && cont2->GetBButton()){
+			sht->SpinMeter(STOP);
+			sht->SpinFeed(-feedPow);
+		}
+		else if(cont2->GetBumper(GenericHID::kRightHand) && cont2->GetBButton()){
+			sht->SpinMeter(STOP);
+			sht->SpinFeed(-feedPow);
+		}
+		else{
+			sht->SpinMeter(STOP);
+			sht->SpinFeed(STOP);
+		}
+
 	}
 }
 
@@ -143,9 +155,7 @@ void Teleop::TeleopOneController(bool sensors){
 	if(!sensors){
 		drv->ArcadeControllerDrive(scale->LinearScale(dBand->DeadbandOut(cont1->GetY(XboxController::kLeftHand), stickDeadband), stickOutSlope, stickOutIntercept, true),
 				scale->LinearScale(dBand->DeadbandOut(cont1->GetX(XboxController::kRightHand), stickDeadband), turnStickOutSlope, turnStickOutIntercept, true));
-		SmartDashboard::PutNumber("Scaled Stick Output", scale->LinearScale(dBand->DeadbandOut(cont1->GetY(XboxController::kLeftHand), stickDeadband), stickOutSlope, stickOutIntercept, true));
 
-		SmartDashboard::PutNumber("POV", cont1->GetPOV());
 		if(cont1->GetPOV() == 0){
 			drv->ArcadeControllerDrive(-1.0, 0.0);
 		}
@@ -184,12 +194,10 @@ void Teleop::TeleopOneController(bool sensors){
 		clb->Climb(cont1->GetTriggerAxis(GenericHID::kRightHand));
 	}
 
-	else if(sensors){
+	else{
 		drv->ArcadeControllerDrive(scale->LinearScale(dBand->DeadbandOut(cont1->GetY(XboxController::kLeftHand), stickDeadband), stickOutSlope, stickOutIntercept, true),
 				scale->LinearScale(dBand->DeadbandOut(cont1->GetX(XboxController::kRightHand), stickDeadband), turnStickOutSlope, turnStickOutIntercept, true));
-		SmartDashboard::PutNumber("Scaled Stick Output", scale->LinearScale(dBand->DeadbandOut(cont1->GetY(XboxController::kLeftHand), stickDeadband), stickOutSlope, stickOutIntercept, true));
 
-		SmartDashboard::PutNumber("POV", cont1->GetPOV());
 		if(cont1->GetPOV() == 0){
 			drv->ArcadeControllerDrive(-1.0, 0.0);
 		}

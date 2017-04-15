@@ -1,6 +1,6 @@
 #include <systems/DriveSystem/DriveSystem.h>
 
-DriveSystem::DriveSystem(RobotDrive* roboDrive, AnalogGyro* gyro){
+DriveSystem::DriveSystem(RobotDrive* roboDrive, ADXRS450_Gyro* gyro){
 	drov = roboDrive;
 	drov->SetSafetyEnabled(true);
 	drov->SetExpiration(0.1);
@@ -29,19 +29,19 @@ void DriveSystem::TimeStraightDrive(double driveSpeed, double driveSeconds){
 		drov->ArcadeDrive(driveSpeed, 0.0, false);
 		Wait(0.01);
 	}
-	/*drov->ArcadeDrive(driveSpeed, 0.0, false);
-	Wait(driveSeconds);*/
 	drov->ArcadeDrive(0.0, 0.0, false);
 	drov->SetSafetyEnabled(true);
 }
 
 void DriveSystem::TimeStraightGyroDrive(double driveSpeed, double driveSeconds){
 	drov->SetSafetyEnabled(false);
+	gyr->Reset();
+	gyroIAccum = 0.0; //Clearing I factor accumulation for gyro PID
 	for(int i = 0; i <= driveSeconds*100; i++){
 		gyroIAccum += gyr->GetAngle();
 		double anglePCorrect = (gyr->GetAngle()*0.03);
 		double angleICorrect = (gyroIAccum*0.0013);
-		double angleCorrection = -(anglePCorrect+angleICorrect);
+		double angleCorrection = (anglePCorrect+angleICorrect);
 		SmartDashboard::PutNumber("P", anglePCorrect);
 		SmartDashboard::PutNumber("I", angleICorrect);
 		SmartDashboard::PutNumber("Correction", angleCorrection);

@@ -31,7 +31,11 @@ ShootSystem::~ShootSystem(){
 
 }
 
-void ShootSystem::SpinShoot(double speed){
+void ShootSystem::SpinShoot(double shootPow){
+	bshoot->Set(shootPow);
+}
+
+void ShootSystem::SpinShootEncoder(double speed){
 	if(speed == 0){
 		bshoot->Set(0.0);
 	}

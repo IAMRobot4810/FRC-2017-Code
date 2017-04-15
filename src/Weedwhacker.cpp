@@ -10,7 +10,7 @@ Weedwhacker::Weedwhacker(){ //Constructor
 	frTalon = new CANTalon(frTalID);
 	rrTalon = new CANTalon(rrTalID);
 	robotDrive = new RobotDrive(flTalon, rlTalon, frTalon, rrTalon);
-	gyration = new AnalogGyro(gyroID);
+	gyration = new ADXRS450_Gyro(SPI::kOnboardCS0);
 	drive = new DriveSystem(robotDrive, gyration);
 
 	//GearSystem objects
@@ -38,15 +38,15 @@ Weedwhacker::Weedwhacker(){ //Constructor
 
 	//Autonomous objects
 	ato = new Auto(drive, gear, gearSensor, pegSensor, ball);
+	gearAuto = true;
+	shootAutoPower = 2;
+	gearPosEnum = Auto::kMiddleAuto;
+	shootPowerEnum = Auto::kMidPow;
+	gearFirst = false;
 
 	//Sight cameras
 	cammy = CameraServer::GetInstance();
 	cammy2 = CameraServer::GetInstance();
-
-	//Status indicator/decoration LEDs
-	rLED = new Relay(rLEDID, Relay::kBothDirections);
-	gLED = new Relay(gLEDID, Relay::kBothDirections);
-	bLED = new Relay(bLEDID, Relay::kBothDirections);
 }
 
 Weedwhacker::~Weedwhacker(){ //Destructor
@@ -78,12 +78,6 @@ Weedwhacker::~Weedwhacker(){ //Destructor
 
 	delete gyration;
 	delete ato;
-
-	//delete pdp;
-
-	delete rLED;
-	delete gLED;
-	delete bLED;
 }
 
 void Weedwhacker::RobotInit(){ //Initializes robot, runs at startup
@@ -91,65 +85,48 @@ void Weedwhacker::RobotInit(){ //Initializes robot, runs at startup
 	cammy->StartAutomaticCapture(camera1ID);
 	cammy2->StartAutomaticCapture(camera2ID);
 
-	//Initializing autonomous modes chooser
-	autoChooser.AddDefault(autoNameDefault, autoNameDefault);
-	autoChooser.AddObject(autoNameMGear, autoNameMGear);
-	autoChooser.AddObject(autoNameLBall, autoNameLBall);
-	autoChooser.AddObject(autoNameMBall, autoNameMBall);
-	autoChooser.AddObject(autoNameHBall, autoNameHBall);
-	autoChooser.AddObject(autoNameMBall, autoNameMBallGear);
-	autoChooser.AddObject(autoNameMBall, autoNameMGearBall);
-	SmartDashboard::PutData("Auto Modes", &autoChooser);
-
-	//Initializing Teleop modes chooser
-	teleChooser.AddDefault(teleNameDefault, teleNameDefault);
-	teleChooser.AddObject(teleName1s, teleName1s);
-	teleChooser.AddObject(teleName1ns, teleName1ns);
-	SmartDashboard::PutData("Tele Modes", &teleChooser);
+	SmartDashboard::PutBoolean("Gear in Auto?", true);
+	SmartDashboard::PutNumber("Auto Shooting Power", 2);
+	SmartDashboard::PutBoolean("Gear First in Auto?", false);
 }
 
 void Weedwhacker::AutonomousInit(){ //Runs once when autonomous is enabled
-	//Getting input from autonomous modes chooser
-	autoSelected = autoChooser.GetSelected();
-	std::string autoSelected = SmartDashboard::GetString("Auto Selector", autoNameDefault);
-	std::cout << "Auto selected: " << autoSelected << std::endl;
-
 	ato->AutoInitialize();
+	gearAuto = SmartDashboard::GetBoolean("Gear in Auto?", true);
+	if(!gearAuto){
+		gearPosEnum = Auto::kLeftAuto;
+	}
+	else{
+		gearPosEnum = Auto::kMiddleAuto;
+	}
+
+	shootAutoPower = SmartDashboard::GetNumber("Auto Shooting Power", 2);
+	if(shootAutoPower == 0){
+		shootPowerEnum = Auto::kNoPow;
+	}
+	else if(shootAutoPower == 1){
+		shootPowerEnum = Auto::kLowPow;
+	}
+	else if(shootAutoPower == 3){
+		shootPowerEnum = Auto::kHighPow;
+	}
+	else{
+		shootPowerEnum = Auto::kMidPow;
+	}
+
+	gearFirst = SmartDashboard::GetBoolean("Gear First in Auto?", false);
 }
 
 void Weedwhacker::AutonomousPeriodic(){ //Autonomous loop
-	//Running selected autonomous mode
-	/*if(autoSelected == autoNameMGear){
-		ato->GearAuto(Auto::kMiddleAuto);
+	if(gearFirst){
+		ato->GearBallAuto(gearPosEnum, shootPowerEnum);
 	}
-	else if(autoSelected == autoNameLBall){
-		ato->BallAuto(Auto::kLowPow);
+	else{
+		ato->BallGearAuto(gearPosEnum, shootPowerEnum);
 	}
-	else if(autoSelected == autoNameMBall){
-		ato->BallAuto(Auto::kMidPow);
-	}
-	else if(autoSelected == autoNameHBall){
-		ato->BallAuto(Auto::kHighPow);
-	}
-	if(autoSelected == autoNameMBallGear){
-		ato->BallGearAuto(Auto::kMiddleAuto);
-	}
-	if(autoSelected == autoNameMGearBall){
-		ato->GearBallAuto(Auto::kMiddleAuto);
-	}
-	else{ // Default autonomous mode
-		ato->BaselineAuto();
-	}*/
-	//ato->BallAuto(Auto::kMidPow);
-	ato->BallGearAuto(Auto::kMiddleAuto, Auto::kMidPow);
 }
 
 void Weedwhacker::TeleopInit(){ //Runs once when teleop is enabled
-	//Getting input from teleop modes chooser
-	teleSelected = teleChooser.GetSelected();
-	std::string teleSelected = SmartDashboard::GetString("Teleop Selector", teleNameDefault);
-	std::cout << "Teleop selected: " << teleSelected << std::endl;
-
 	//Stopping weedwhacker
 	ball->SpinShoot(STOP);
 	ball->SpinFeed(STOP);
@@ -157,21 +134,7 @@ void Weedwhacker::TeleopInit(){ //Runs once when teleop is enabled
 }
 
 void Weedwhacker::TeleopPeriodic(){ //Teleop loop
-	//Running selected teleop mode
-	if(teleSelected == teleName1s) {
-		tlp->TeleopOneController(true);
-	}
-	else if(teleSelected == teleName1ns){
-		tlp->TeleopOneController(false);
-	}
-	else {
-		tlp->TeleopTwoController(true);
-	}
-
-	//Printing some values for testing
-	SmartDashboard::PutNumber("shootSpeed", shooterTal->GetSpeed());
-	SmartDashboard::PutNumber("shootVel", shooterTal->GetEncVel());
-	SmartDashboard::PutNumber("shootVolt", shooterTal->GetBusVoltage());
+	tlp->TeleopTwoController(true);
 }
 
 void Weedwhacker::TestInit(){ //Runs once when test mode is enabled, for testing

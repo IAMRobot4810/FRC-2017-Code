@@ -16,7 +16,7 @@ void loop() {
   enc2_value = pulseIn(ENC2_PIN, HIGH);
   buff[0] = enc1_value;
   buff[1] = enc2_value;
-  Serial.write(buff, 2);
+  //Serial.write(buff, 2);
   Serial.println(enc2_value);
   delay(10);
 }

@@ -15,10 +15,7 @@ enum GeneralIDs {
 	pdpID = 1,
 	camera1ID = 0,
 	camera2ID = 1,
-	rLEDID = 0,
-	gLEDID = 1,
-	bLEDID = 2,
-	gyroID = 0
+	gyroID = 1
 };
 
 enum ControllerIDs {
@@ -27,33 +24,32 @@ enum ControllerIDs {
 };
 
 enum DriveIDs {
-	flTalID = 2, //3, //2
-	rlTalID = 1, //5, //1
-	frTalID = 4, //2, //4
-	rrTalID = 5, //1,
-	flEncID = 0,
-	frEncID = 3,
+	flTalID = 3,
+	rlTalID = 5,
+	frTalID = 2,
+	rrTalID = 1
 };
 
 enum ClimberIDs {
-	roller1TalID = 9,
-	roller2TalID = 8//4//8, //7
+	roller1TalID = 4,
+	roller2TalID = 9
 };
 
 enum GearIDs {
 	pcmID = 1,
-	raiseNoidForwardID = 0,//3,
-	raiseNoidReverseID = 1,//2,
-	clawNoidForwardID = 2,//1,
-	clawNoidReverseID = 3,//0
+	raiseNoidForwardID = 0,
+	raiseNoidReverseID = 1,
+	clawNoidForwardID = 2,
+	clawNoidReverseID = 3,
 	gearSensorID = 0,
 	pegSensorID = 1
 };
 
 enum ShootIDs {
-	feederTalID = 3,//6,
-	meterTalID = 6, //7,//7, //4
-	shooterTalID = 7 //4
+	feederTalID = 8,
+	feederPDPID = 1,
+	meterTalID = 7,
+	shooterTalID = 6
 };
 
 #endif /* SRC_UTIL_DEVICEID_H_ */

@@ -11,6 +11,7 @@
 #include <CANTalon.h>
 #include <RobotDrive.h>
 #include <AnalogGyro.h>
+#include <ADXRS450_Gyro.h>
 #include <PWM.h>
 #include <util/DeviceID.h>
 #include <Timer.h>
@@ -25,11 +26,11 @@ using namespace frc;
 class DriveSystem {
 
 public:
-	DriveSystem(RobotDrive* roboDrive, AnalogGyro* gyro);
+	DriveSystem(RobotDrive* roboDrive, ADXRS450_Gyro* gyro);
 	~DriveSystem();
 
 	RobotDrive* drov;
-	AnalogGyro* gyr;
+	ADXRS450_Gyro* gyr;
 
 	void TankControllerDrive(double leftSpeed, double rightSpeed);
 	void ArcadeControllerDrive(double moveSpeed, double turnSpeed);
@@ -41,9 +42,10 @@ public:
 	void RotateDrive(double positiveDriveSpeed, double driveDegrees, bool reInitializeGyro);
 	void GearVisionDrive(double stopDist);
 
-private:
 	//Gyro PID Variables
 	double gyroIAccum = 0;
+
+private:
 
 protected:
 

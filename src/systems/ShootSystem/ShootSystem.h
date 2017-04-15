@@ -28,7 +28,8 @@ public:
 	CANTalon* bmeter;
 	CANTalon* bshoot;
 
-	void SpinShoot(double speed);
+	void SpinShoot(double shootPow);
+	void SpinShootEncoder(double speed);
 	void SpinMeter(double speed);
 	void SpinFeed(double speed);
 	void UnjamFeed(double speed);

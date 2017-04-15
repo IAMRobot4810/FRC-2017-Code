@@ -39,21 +39,23 @@ public:
 	 * it can be specified no matter the alliance.
 	 */
 	enum shooterPowMode{
-		kLowPow = 0,
-		kMidPow = 1,
-		kHighPow = 2
+		kNoPow = 0,
+		kLowPow = 1,
+		kMidPow = 2,
+		kHighPow = 3
 	};
 
 	void AutonRun(bool gear, bool ball, bool sensor); //A messy function that will be removed
 
 	void AutoInitialize(); //Initializes autonomous variables
-	void BaselineAuto(); //Autonomous to just reach the baseline and stop
+	void BaselineAuto(); //Autonomous to just reach the baseline and stop. The basis of any nutritious auto!
+	void BaselineGyroAuto(); //Autonomous to just reach the baseline and stop. Now with gyro!
 	void BallAuto(shooterPowMode power); //Shoots balls and reaches baseline
 	void GearAuto(AutoPosition position); //Places a gear on the peg
 	void GearVisionAuto(AutoPosition position); //Vision-based GearAuto
 	void BallGearAuto(AutoPosition position, Auto::shooterPowMode shootPower); //Shoots balls then places a gear
 	void BallGearVisionAuto(AutoPosition position); //Vision-based BallGearAuto
-	void GearBallAuto(AutoPosition position); //Places a gear, drives back, then shoots balls
+	void GearBallAuto(AutoPosition position, Auto::shooterPowMode shootPower); //Places a gear, drives back, then shoots balls
 	void GearBallVsionAuto(AutoPosition position); //Vision-based GearBallAuto
 
 private:
@@ -63,7 +65,6 @@ private:
 	DigitalInput* gDetect;
 	DigitalInput* pDetect1;
 	ShootSystem* sht;
-	SerialPort* duino;
 	PowerDistributionPanel* powerPanel;
 
 	//Autonomous variables to stop from looping in periodic
@@ -71,17 +72,19 @@ private:
 	bool shotBalls = false;
 	bool gearPlaced = false;
 
+	//Shooter jamming loops
 	int jamCycles;
 	int unjamCycles;
 
-	//Part of messy AutonRun
+	/*//Part of messy AutonRun
 	bool ingear = false;
 	bool ballDone = false;
 	bool backedup = false;
+	SerialPort* duino;
 	char *buff;
 	int buffread1;
 	int buffread2;
-	int buffread3;
+	int buffread3;*/
 
 protected:
 
